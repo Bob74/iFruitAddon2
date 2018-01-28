@@ -20,6 +20,22 @@ namespace iFruitAddon2
 
         public iFruitAddon2()
         {
+            Tick += Initialize;
+        }
+
+        private void Initialize(object sender, EventArgs e)
+        {
+            while (Game.IsLoading)
+                Yield();
+
+            LoadConfigValues();
+            if (IsUpdateAvailable()) NotifyNewUpdate();
+
+            Tick -= Initialize;
+        }
+
+        private void LoadConfigValues()
+        {
             if (!Directory.Exists(_configDir))
             {
                 Logger.Log("Creating config directory.");
@@ -33,8 +49,6 @@ namespace iFruitAddon2
 
             Config = ScriptSettings.Load(_configFile);
             contactIndex = Config.GetValue("General", "StartIndex", 40);
-
-            if (IsUpdateAvailable()) NotifyNewUpdate();
         }
 
         private bool IsUpdateAvailable()
