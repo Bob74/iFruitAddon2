@@ -63,6 +63,7 @@ namespace iFruitAddon
         /// <param name="contacts"></param>
         public CustomiFruit(iFruitContactCollection contacts)
         {
+            if (iFruitAddon2.IsUpdateAvailable()) iFruitAddon2.NotifyNewUpdate();
             _contacts = contacts;
             _mScriptHash = Game.GenerateHash("cellphone_flashhand"); //_mScriptHash = Function.Call<int>(Hash.GET_HASH_KEY, "cellphone_flashhand");
         }
@@ -70,7 +71,7 @@ namespace iFruitAddon
         /// <summary>
         /// Handle of the current scaleform.
         /// </summary>
-        public int Handle
+        public static int Handle
         {
             get
             {

@@ -13,13 +13,6 @@ namespace iFruitAddon
         private int _callTimer, _busyTimer;
 
         /// <summary>
-        /// Fired when the contact is selected in the contacts app.
-        /// </summary>
-        /*[Obsolete("This method will be removed. Use the Answered event instead.")]
-        internal event ContactSelectedEvent Selected;
-        internal virtual void OnSelected(iFruitContactCollection sender) { Selected?.Invoke(sender, this); }*/
-
-        /// <summary>
         /// Fired when the contact picks up the phone.
         /// </summary>
         public event ContactAnsweredEvent Answered;
@@ -52,12 +45,12 @@ namespace iFruitAddon
         /// </summary>
         public ContactIcon Icon { get; set; } = ContactIcon.Generic;
 
-        public iFruitContact(string name, int index)
+        public iFruitContact(string name)
         {
             Name = name;
-            Index = index;
+            Index = iFruitAddon2.ContactIndex;
+            iFruitAddon2.ContactIndex++;
         }
-
         internal void Draw(int handle)
         {
             Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, handle, "SET_DATA_SLOT");
@@ -103,7 +96,10 @@ namespace iFruitAddon
                     _busyActive = true;
                 }
                 else
+                {
+                    iFruitContactCollection.DisplayCallUI(CustomiFruit.Handle, Name, "CELL_219", Icon.Name); // Displays "CONNECTED"
                     OnAnswered(this); // Answer the phone
+                }
 
                 _dialActive = false;
             }
@@ -131,7 +127,10 @@ namespace iFruitAddon
                 _dialActive = true;
             }
             else
+            {
+                iFruitContactCollection.DisplayCallUI(CustomiFruit.Handle, Name, "CELL_219", Icon.Name); // Displays "CONNECTED"
                 OnAnswered(this); // Answer the phone instantly
+            }
         }
 
         /// <summary>
@@ -155,5 +154,6 @@ namespace iFruitAddon
                 _busyActive = false;
             }
         }
+
     }
 }
