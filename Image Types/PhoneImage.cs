@@ -1,7 +1,7 @@
 ﻿
 using GTA.Native;
 
-namespace iFruitAddon
+namespace iFruitAddon2
 {
     public abstract class PhoneImage
     {

@@ -6,7 +6,7 @@ using System.IO;
 /// </summary>
 static class Logger
 {
-    private static string logFileName = "MMI-SP.log";
+    private static string logFileName = "iFruitAddon2.log";
 
     public static void Log(object message)
     {

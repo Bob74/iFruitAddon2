@@ -3,7 +3,7 @@
 using GTA;
 using GTA.Native;
 
-namespace iFruitAddon
+namespace iFruitAddon2
 {
     //public delegate void ContactSelectedEvent(iFruitContactCollection sender, iFruitContact selectedItem);
     public delegate void ContactAnsweredEvent(iFruitContact contact);
@@ -63,9 +63,8 @@ namespace iFruitAddon
         /// <param name="contacts"></param>
         public CustomiFruit(iFruitContactCollection contacts)
         {
-            if (iFruitAddon2.IsUpdateAvailable()) iFruitAddon2.NotifyNewUpdate();
             _contacts = contacts;
-            _mScriptHash = Game.GenerateHash("cellphone_flashhand"); //_mScriptHash = Function.Call<int>(Hash.GET_HASH_KEY, "cellphone_flashhand");
+            _mScriptHash = Game.GenerateHash("cellphone_flashhand");
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿
-namespace iFruitAddon
+namespace iFruitAddon2
 {
     public sealed class ContactIcon : PhoneImage
     {

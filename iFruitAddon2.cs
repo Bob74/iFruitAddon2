@@ -1,56 +1,70 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 using GTA;
 
-namespace iFruitAddon
+namespace iFruitAddon2
 {
-    static class iFruitAddon2
+    class iFruitAddon2 : Script
     {
         private static string version = "2.0.0";
-        private static bool updateChecked = false;
+        private static string _configDir = AppDomain.CurrentDomain.BaseDirectory + "\\iFruitAddon2";
+        private static string _configFile = _configDir + "\\config.ini";
 
         private static int contactIndex = 40;
         public static int ContactIndex { get => contactIndex; internal set => contactIndex = value; }
 
-        public static bool IsUpdateAvailable()
+        private static ScriptSettings _config;
+        public static ScriptSettings Config { get => _config; private set => _config = value; }
+
+        public iFruitAddon2()
         {
-            if (!updateChecked)
+            if (!Directory.Exists(_configDir))
             {
-                string downloadedString = "";
+                Logger.Log("Creating config directory.");
+                Directory.CreateDirectory(_configDir);
+            }
+            if (!File.Exists(_configFile))
+            {
+                Logger.Log("Creating config file.");
+                File.WriteAllText(_configFile, Properties.Resources.config);
+            }
 
-                try
-                {
-                    WebClient client = new WebClient();
-                    downloadedString = client.DownloadString("https://raw.githubusercontent.com/Bob74/iFruitAddon2/master/version");
+            Config = ScriptSettings.Load(_configFile);
+            contactIndex = Config.GetValue("General", "StartIndex", 40);
 
-                    downloadedString = downloadedString.Replace("\r", "");
-                    downloadedString = downloadedString.Replace("\n", "");
+            if (IsUpdateAvailable()) NotifyNewUpdate();
+        }
 
-                    if (downloadedString == version)
-                        return false;
-                    else
-                        return true;
-                }
-                catch (Exception e)
-                {
-                    Logger.Log("Error: IsUpdateAvailable - " + e.Message);
-                }
+        private bool IsUpdateAvailable()
+        {
+            string downloadedString = "";
 
-                updateChecked = true;
+            try
+            {
+                WebClient client = new WebClient();
+                downloadedString = client.DownloadString("https://raw.githubusercontent.com/Bob74/iFruitAddon2/master/version");
+
+                downloadedString = downloadedString.Replace("\r", "");
+                downloadedString = downloadedString.Replace("\n", "");
+
+                if (downloadedString == version)
+                    return false;
+                else
+                    return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Log("Error: IsUpdateAvailable - " + e.Message);
             }
 
             return false;
         }
 
-        public static void NotifyNewUpdate()
+        private void NotifyNewUpdate()
         {
             UI.Notify("iFruitAddon2: A new update is available!", true);
         }
-
     }
 }

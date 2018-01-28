@@ -3,7 +3,7 @@
 using GTA.Native;
 using GTA;
 
-namespace iFruitAddon
+namespace iFruitAddon2
 {
     public class iFruitContactCollection : List<iFruitContact>
     {
@@ -42,6 +42,7 @@ namespace iFruitAddon
 
                 if (_selectedIndex != -1 && _selectedIndex == contact.Index)
                 {
+                    // Prevent original contact to be called
                     Tools.Scripts.TerminateScript("appcontacts");
 
                     contact.Call();
