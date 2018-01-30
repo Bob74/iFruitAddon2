@@ -10,10 +10,12 @@ namespace iFruitAddon2
 
     public class CustomiFruit
     {
+        private static CustomiFruit _instance;
         private bool _shouldDraw = true;
         private PhoneImage _wallpaper;
         private iFruitContactCollection _contacts;
         private int _mScriptHash;
+        private int _timerClose = -1;
 
         /// <summary>
         /// Left Button Color
@@ -63,6 +65,7 @@ namespace iFruitAddon2
         /// <param name="contacts"></param>
         public CustomiFruit(iFruitContactCollection contacts)
         {
+            _instance = this;
             _contacts = contacts;
             _mScriptHash = Game.GenerateHash("cellphone_flashhand");
         }
@@ -70,19 +73,34 @@ namespace iFruitAddon2
         /// <summary>
         /// Handle of the current scaleform.
         /// </summary>
-        public static int Handle
+        public static CustomiFruit GetCurrentInstance() { return _instance; }
+        public int Handle
         {
             get
             {
+                int h = 0;
                 switch ((uint)Game.Player.Character.Model.Hash)
                 {
                     case (uint)PedHash.Michael:
-                        return Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, "cellphone_ifruit");
+                        h = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, "cellphone_ifruit");
+                        while (!Function.Call<bool>(Hash.HAS_SCALEFORM_MOVIE_LOADED, h))
+                            Script.Yield();
+                        return h;
                     case (uint)PedHash.Franklin:
-                        return Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, "cellphone_badger");
+                        h = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, "cellphone_badger");
+                        while (!Function.Call<bool>(Hash.HAS_SCALEFORM_MOVIE_LOADED, h))
+                            Script.Yield();
+                        return h;
                     case (uint)PedHash.Trevor:
-                        return Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, "cellphone_facade");
-                    default: return Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, "cellphone_ifruit");
+                        h = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, "cellphone_facade");
+                        while (!Function.Call<bool>(Hash.HAS_SCALEFORM_MOVIE_LOADED, h))
+                            Script.Yield();
+                        return h;
+                    default:
+                        h = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, "cellphone_ifruit");
+                        while (!Function.Call<bool>(Hash.HAS_SCALEFORM_MOVIE_LOADED, h))
+                            Script.Yield();
+                        return h;
                 }
             }
         }
@@ -190,9 +208,53 @@ namespace iFruitAddon2
                 _shouldDraw = true;
             }
 
+            
+            if (_timerClose != -1)
+            {
+                if (_timerClose <= Game.GameTime)
+                {
+                    Close();
+                    _timerClose = -1;
+                }
+            }
+
             _contacts.Update(Handle);
         }
+
+        /// <summary>
+        /// Closes the phone.
+        /// </summary>
+        /// <param name="timer">Thread safe timer waiting before closing the phone. Time in ms.</param>
+        public void Close(int timer = 0)
+        {
+            if (timer == 0)
+                Close();
+            else
+                _timerClose = Game.GameTime + timer;
+        }
+        private void Close()
+        {
+            if (Function.Call<int>(Hash._GET_NUMBER_OF_INSTANCES_OF_STREAMED_SCRIPT, _mScriptHash) > 0)
+            {
+                Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, Handle, "SHUTDOWN_MOVIE");
+                Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
+
+                Script.Yield();
+
+                //Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, CustomiFruit.GetCurrentInstance().Handle);
+                Tools.Scripts.DestroyPhone(Handle);
+                Tools.Scripts.TerminateScript("cellphone_flashhand");
+                Tools.Scripts.TerminateScript("cellphone_controller");
+
+                Script.Yield();
+
+                Tools.Scripts.StartScript("cellphone_flashhand", 1424);
+                Tools.Scripts.StartScript("cellphone_controller", 1424);
+            }
+        }
+
     }
+
 
     public enum SoftKeyIcon
     {

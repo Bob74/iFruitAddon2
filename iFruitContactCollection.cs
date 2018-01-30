@@ -51,6 +51,7 @@ namespace iFruitAddon2
                     Script.Wait(10);
                     
                     RemoveActiveNotification();
+                    
                 }
 
             }

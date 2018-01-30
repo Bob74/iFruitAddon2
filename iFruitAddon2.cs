@@ -4,11 +4,32 @@ using System.Net;
 
 using GTA;
 
+
+
+/*
+    Changelog:
+        2.0.1 (xx/xx/2018): - Possible to close the phone (if the contact opens a menu, avoid using controls to navigate in the menu AND in the phone)
+                            - At the moment, it is mandatory to close the phone in order to be compatible with RPH
+
+        2.0.0 (28/01/2018): Initial release
+
+
+    TODO :
+    ------
+    X Gérer les menus NativeUI en parallèle du téléphone => Possibilité de fermer le téléphone quand le script ouvre le menu
+    X Ajouter un timer dans la fonction Close() pour éviter d'avoir à gérer ça côté script
+    - Téléphone qui se ferme quand on appel (CELL_LEFT_SESS) :
+        > Réouvrir le téléphone dans la foulée ?
+        > Pour éviter qu'il ne se ferme, il faudrait kill "appcontacts" avant d'appeler mais dans ce cas on ne peut plus se déplacer dans les contacts
+        > RPH : Reste ouvert sans icône de contact (appel d'un contact inconnu géré par RPH), impossible de fermer le téléphone sans le détruire et tuer les scripts
+
+*/
 namespace iFruitAddon2
 {
     class iFruitAddon2 : Script
     {
-        private static string version = "2.0.0";
+        private static string version = "2.0.1"; // ! A CHANGER AUSSI DANS ASSEMBLY !
+
         private static string _configDir = AppDomain.CurrentDomain.BaseDirectory + "\\iFruitAddon2";
         private static string _configFile = _configDir + "\\config.ini";
 
