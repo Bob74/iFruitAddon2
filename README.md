@@ -1,6 +1,6 @@
 # iFruitAddon2
-Updated version of the original iFruitAddon by **CamxxCore**.
-Allows you to handle to game's phone in order to add contacts, change the button's, wallpaper and more!
+Updated version of the original iFruitAddon by **CamxxCore**.  
+Allows you to handle the game's phone in order to add contacts, change the button's, wallpaper and more!
 
 ## Installation
 - Requires [ScriptHookVDotNet](https://github.com/crosire/scripthookvdotnet/releases)
