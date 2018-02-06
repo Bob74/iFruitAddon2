@@ -20,4 +20,6 @@ If you are used to iFruitAddon, you will see two main differences:
 * Contact's indexes are set automatically and are shared between mods (you cannot overwrite another mod's contact anymore).
 * You can close the phone with the `Close(int)` method. It is useful if you use a contact to open a NativeUI menu. Since NativeUI menus use the same controls to navigate as the phone, you can close the phone to avoid navigating in the menu while browsing your menu.
 * Updated list of phone contact's pictures.
+* Added the **CONNECTED** text when the contact has answered.
+* Automatically localized texts ("DIALING...", "BUSY...", "CONNECTED", etc.).
 * Checks if **iFruitAddon2**'s updates are available when the game starts.
