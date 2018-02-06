@@ -1,5 +1,5 @@
 # iFruitAddon2
-Updated version of the original iFruitAddon by CamxxCore.
+Updated version of the original iFruitAddon by **CamxxCore**.
 
 
 ## Installation
