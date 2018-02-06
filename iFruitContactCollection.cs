@@ -68,7 +68,8 @@ namespace iFruitAddon2
         /// <param name="picName"></param>
         public static void DisplayCallUI(int handle, string contactName, string statusText = "CELL_211", string picName = "CELL_300")
         {
-            string dialText = Function.Call<string>(Hash._GET_LABEL_TEXT, statusText); // "DIALING..." translated in current game's language
+            string dialText = Game.GetGXTEntry(statusText); // "DIALING..." translated in current game's language
+
             Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, handle, "SET_DATA_SLOT");
             Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, 4);
             Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, 0);
