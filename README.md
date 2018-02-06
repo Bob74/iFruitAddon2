@@ -3,7 +3,7 @@ Updated version of the original iFruitAddon by CamxxCore.
 
 
 ## Installation
-- Requires ScriptHookVDotNet
+- Requires [ScriptHookVDotNet](https://github.com/crosire/scripthookvdotnet/releases)
 - Put the file in your **GTA V\scripts directory**
 
 ## How to use (developper)
