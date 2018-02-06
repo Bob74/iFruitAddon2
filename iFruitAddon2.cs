@@ -8,7 +8,7 @@ using GTA;
 
 /*
     Changelog:
-        2.0.1 (xx/xx/2018): - Possible to close the phone (if the contact opens a menu, avoid using controls to navigate in the menu AND in the phone)
+        2.0.1 (30/01/2018): - Possible to close the phone (if the contact opens a menu, avoid using controls to navigate in the menu AND in the phone)
                             - At the moment, it is mandatory to close the phone in order to be compatible with RPH
 
         2.0.0 (28/01/2018): Initial release
@@ -83,6 +83,8 @@ namespace iFruitAddon2
 
                 downloadedString = downloadedString.Replace("\r", "");
                 downloadedString = downloadedString.Replace("\n", "");
+
+                client.Dispose();
 
                 if (downloadedString == version)
                     return false;
