@@ -15,12 +15,14 @@ namespace iFruitTester
             _iFruit = new CustomiFruit();
 
             // Phone customization (totally optional)
+            /*
             _iFruit.CenterButtonColor = System.Drawing.Color.Orange;
             _iFruit.LeftButtonColor = System.Drawing.Color.LimeGreen;
             _iFruit.RightButtonColor = System.Drawing.Color.Purple;
             _iFruit.CenterButtonIcon = SoftKeyIcon.Fire;
             _iFruit.LeftButtonIcon = SoftKeyIcon.Police;
             _iFruit.RightButtonIcon = SoftKeyIcon.Website;
+            */
 
             // New contact (wait 4 seconds (4000ms) before picking up the phone)
             iFruitContact contactA = new iFruitContact("Test contact");
