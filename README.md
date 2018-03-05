@@ -1,5 +1,5 @@
 # iFruitAddon2
-Updated version of the original iFruitAddon by **CamxxCore**.  
+Updated version of the original [iFruitAddon](https://github.com/CamxxCore/iFruitAddon) by **CamxxCore**.  
 Allows you to handle the game's phone in order to add contacts, change the button's, wallpaper and more!
 
 ## Installation
