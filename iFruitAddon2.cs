@@ -54,6 +54,9 @@ namespace iFruitAddon2
         private static ScriptSettings _config;
         public static ScriptSettings Config { get => _config; private set => _config = value; }
 
+        private bool CheckForUpdates = true;
+
+
         public iFruitAddon2()
         {
             Tick += Initialize;
@@ -94,7 +97,8 @@ namespace iFruitAddon2
                 Yield();
 
             LoadConfigValues();
-            if (IsUpdateAvailable()) NotifyNewUpdate();
+            if (CheckForUpdates)
+                if (IsUpdateAvailable()) NotifyNewUpdate();
 
             _initialized = true;
 
@@ -126,6 +130,7 @@ namespace iFruitAddon2
 
             Config = ScriptSettings.Load(_configFile);
             contactIndex = Config.GetValue("General", "StartIndex", 40);
+            CheckForUpdates = Config.GetValue("General", "CheckForUpdates", true);
         }
 
         private bool IsUpdateAvailable()
