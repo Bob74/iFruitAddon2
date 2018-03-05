@@ -96,6 +96,8 @@ namespace iFruitAddon2
 
             while (Game.IsLoading)
                 Yield();
+            while (Game.IsScreenFadingIn)
+                Yield();
 
             LoadConfigValues();
             if (CheckForUpdates)
