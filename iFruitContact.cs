@@ -46,6 +46,11 @@ namespace iFruitAddon2
         /// </summary>
         public ContactIcon Icon { get; set; } = ContactIcon.Generic;
 
+        /// <summary>
+        /// Set the contact text in bold.
+        /// </summary>
+        public bool Bold { get; set; } = false;
+
         public iFruitContact(string name)
         {
             UpdateContactIndex();
@@ -66,7 +71,7 @@ namespace iFruitAddon2
             Function.Call(Hash._BEGIN_TEXT_COMPONENT, "CELL_999");
             Function.Call(Hash._END_TEXT_COMPONENT);
             Function.Call(Hash._BEGIN_TEXT_COMPONENT, "CELL_2000");
-            Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, Icon.Name);
+            Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, Icon.Name.SetBold(Bold));
             Function.Call(Hash._END_TEXT_COMPONENT);
             Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
         }
@@ -93,7 +98,7 @@ namespace iFruitAddon2
                 if (!Active)
                 {
                     // Contact is busy, play the busy sound until the busytimer runs off
-                    iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_220", Icon.Name); // Displays "BUSY"
+                    iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_220", Icon.Name.SetBold(Bold)); // Displays "BUSY"
                     _busySoundID = Function.Call<int>(Hash.GET_SOUND_ID);
                     Function.Call(Hash.PLAY_SOUND_FRONTEND, _busySoundID, "Remote_Engaged", "Phone_SoundSet_Default", 1);
                     _busyTimer = Game.GameTime + 5000;
@@ -101,7 +106,7 @@ namespace iFruitAddon2
                 }
                 else
                 {
-                    iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_219", Icon.Name); // Displays "CONNECTED"
+                    iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_219", Icon.Name.SetBold(Bold)); // Displays "CONNECTED"
                     OnAnswered(this); // Answer the phone
                 }
 
@@ -125,7 +130,7 @@ namespace iFruitAddon2
             if (DialTimeout > 0)
             {
                 // Play the Dial sound
-                iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_220", Icon.Name); // Displays "BUSY"
+                iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_220", Icon.Name.SetBold(Bold)); // Displays "BUSY"
                 _dialSoundID = Function.Call<int>(Hash.GET_SOUND_ID);
                 Function.Call(Hash.PLAY_SOUND_FRONTEND, _dialSoundID, "Dial_and_Remote_Ring", "Phone_SoundSet_Default", 1);
                 _callTimer = Game.GameTime + DialTimeout;
@@ -133,7 +138,7 @@ namespace iFruitAddon2
             }
             else
             {
-                iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_219", Icon.Name); // Displays "CONNECTED"
+                iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_219", Icon.Name.SetBold(Bold)); // Displays "CONNECTED"
                 OnAnswered(this); // Answer the phone instantly
             }
         }

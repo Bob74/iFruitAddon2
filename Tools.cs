@@ -2,9 +2,19 @@
 using GTA;
 using GTA.Native;
 
-using iFruitAddon2;
+namespace iFruitAddon2
+{
+    public static class Helper
+    {
+        public static string SetBold(this string text, bool bold)
+        {
+            if (bold) return text.ToLower();
+            else return text.ToUpper();
+        }
+    }
+}
 
-static class Tools
+public static class Tools
 {
     internal static class Scripts
     {

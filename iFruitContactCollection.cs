@@ -46,7 +46,7 @@ namespace iFruitAddon2
                     Tools.Scripts.TerminateScript("appcontacts");
 
                     contact.Call();
-                    DisplayCallUI(handle, contact.Name, "CELL_211" ,contact.Icon.Name);
+                    DisplayCallUI(handle, contact.Name, "CELL_211", contact.Icon.Name.SetBold(contact.Bold));
 
                     Script.Wait(10);
                     

@@ -9,8 +9,9 @@ using GTA;
 
 /*
     Changelog:
-        2.1.0 (...): - Changed the way contact index is stored to allow multiple mods to share the value (it wasn't working as expected).
-                            - New contacts font is not bold anymore. It is now the same as native contacts.
+        2.1.0 (05/03/2018): - Changed the way contact index is stored to allow multiple mods to share the value (it wasn't working as expected).
+                            - Added a "Bold" option to contacts. It sets the contact text in bold or not.
+                            - New contacts font is not bold by default anymore. It is now the same as native contacts.
 
         2.0.1 (30/01/2018): - Possible to close the phone (if the contact opens a menu, avoid using controls to navigate in the menu AND in the phone)
                             - At the moment, it is mandatory to close the phone in order to be compatible with RPH
