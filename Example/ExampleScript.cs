@@ -34,7 +34,8 @@ public class ExampleScript : Script
         iFruitContact contactB = new iFruitContact("Test contact 2");
         contactB.DialTimeout = 4000;
         contactB.Active = false;                // false = the contact is busy
-        contactB.Icon = ContactIcon.Blocked;    
+        contactB.Icon = ContactIcon.Blocked;
+		contactB.Bold = true;					// Set the contact name in bold
         _iFruit.Contacts.Add(contactB);
 
         Tick += OnTick;
