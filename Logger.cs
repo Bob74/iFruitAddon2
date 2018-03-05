@@ -12,4 +12,10 @@ static class Logger
     {
         File.AppendAllText(logFileName, DateTime.Now + " : " + message + Environment.NewLine);
     }
+
+    public static void ResetLogFile()
+    {
+        FileStream fs = File.Create(logFileName);
+        fs.Close();
+    }
 }

@@ -10,8 +10,10 @@ using GTA.Native;
 
 namespace iFruitAddon2
 {
-    static class Debug
+    public static class Debug
     {
+        public static int ContactIndex { get => iFruitAddon2.ContactIndex; }
+
         public static void DrawText(string text, int font, bool centre, float x, float y, float scale, int r, int g, int b, int a)
         {
             Function.Call(Hash.SET_TEXT_FONT, font);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using GTA.Native;
 using GTA;
@@ -47,6 +48,8 @@ namespace iFruitAddon2
 
         public iFruitContact(string name)
         {
+            UpdateContactIndex();
+
             Name = name;
             Index = iFruitAddon2.ContactIndex;
             iFruitAddon2.ContactIndex++;
@@ -154,6 +157,55 @@ namespace iFruitAddon2
                 Function.Call(Hash.RELEASE_SOUND_ID, _busySoundID);
                 _busySoundID = -1;
                 _busyActive = false;
+            }
+        }
+
+        private void UpdateContactIndex()
+        {
+            // Warning: new iFruitContact(...) can be called before iFruitAddon2 is initialized.
+            // That's why it is important not to rely on static variables inside the iFruitAddon2 class.
+            string tempFile = iFruitAddon2.GetTempFilePath();
+
+            if (File.Exists(tempFile))
+            {
+                // Not the first launch
+                bool written = false;
+                while (!written)
+                {
+                    try
+                    {
+                        // We need to check if the file is unlocked and then get the value and write the new one.
+                        int index;
+
+                        StreamReader sr = new StreamReader(tempFile);
+                        if (int.TryParse(sr.ReadLine().Trim(new char[] { '\r', '\n', ' ' }), out index))
+                            iFruitAddon2.ContactIndex = index;
+                        sr.Close();
+
+                        StreamWriter file = new StreamWriter(tempFile);
+                        file.WriteLine(iFruitAddon2.ContactIndex + 1);
+                        file.Close();
+                        written = true;
+                    }
+                    catch (IOException)
+                    {
+                        // The file is locked when StreamReader or StreamWriter has opend it.
+                        // The current instance of iFruitAddon2 must wait until the file is released.
+                    }
+                    catch (Exception ex)
+                    {
+                        // Unknown error occured
+                        Logger.Log(ex.Message);
+                        written = true;
+                    }
+                }
+            }
+            else
+            {
+                // First launch. We create the file
+                StreamWriter file = new StreamWriter(tempFile);
+                file.Write(iFruitAddon2.ContactIndex + 1);
+                file.Close();
             }
         }
 

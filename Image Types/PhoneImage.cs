@@ -13,7 +13,7 @@ namespace iFruitAddon2
         /// <summary>
         /// Initialize the class.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Name of the texture dictionary.</param>
         public PhoneImage(string name)
         {
             LoadTextureDict(name);
@@ -23,7 +23,7 @@ namespace iFruitAddon2
         /// <summary>
         /// Load a texture dictionary by name.
         /// </summary>
-        /// <param name="txd"></param>
+        /// <param name="txd">Name of the texture dictionary.</param>
         private void LoadTextureDict(string txd)
         {
             if (!Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, txd))
