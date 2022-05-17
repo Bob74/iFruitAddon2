@@ -61,6 +61,7 @@ namespace iFruitAddon2
         public iFruitAddon2()
         {
             Tick += Initialize;
+            Aborted += Dispose;
         }
 
         public static string GetTempFilePath()
@@ -95,9 +96,13 @@ namespace iFruitAddon2
             }
 
             while (Game.IsLoading)
+            {
                 Yield();
-            while (Game.IsScreenFadingIn)
+            }
+            while (GTA.UI.Screen.IsFadingIn)
+            {
                 Yield();
+            }
 
             LoadConfigValues();
             if (CheckForUpdates)
@@ -108,13 +113,11 @@ namespace iFruitAddon2
             Tick -= Initialize;
         }
 
-        // Dispose Event
-        protected override void Dispose(bool A_0)
+        private void Dispose(object sender, EventArgs e)
         {
-            if (A_0)
+            if (File.Exists(_tempFilePath))
             {
-                if (File.Exists(_tempFilePath))
-                    File.Delete(_tempFilePath);
+                File.Delete(_tempFilePath);
             }
         }
 
@@ -168,7 +171,7 @@ namespace iFruitAddon2
 
         private void NotifyNewUpdate()
         {
-            UI.Notify("iFruitAddon2: A new update is available!", true);
+            GTA.UI.Notification.Show("iFruitAddon2: A new update is available!", true);
         }
     }
 }
