@@ -9,6 +9,10 @@ using GTA;
 
 /*
     Changelog:
+        3.0.0 (xx/xx/2022): - Switch to ScriptHookVDotNet 3
+                            - Changed update system
+                            -
+
         2.1.0 (05/03/2018): - Changed the way contact index is stored to allow multiple mods to share the value (it wasn't working as expected).
                             - Added a "Bold" option to contacts. It sets the contact text in bold or not.
                             - New contacts font is not bold by default anymore. It is now the same as native contacts.
@@ -22,7 +26,7 @@ using GTA;
     TODO :
     ------
     - Supprimer la notification seulement si elle correspond à CELL_LEFT_SESS
-    - Permettre de choisir de mettre le contact en "Bold" (= nom du textureDictionary en minuscule)
+    X Permettre de choisir de mettre le contact en "Bold" (= nom du textureDictionary en minuscule)
     
     X Utiliser Game.GetGXTEntry au lieu de _GET_LABEL_TEXT
 
@@ -38,14 +42,16 @@ namespace iFruitAddon2
 {
     class iFruitAddon2 : Script
     {
+        internal static bool IsDebug = false;
+
         private static bool _initialized = false;
         internal static bool Initialized { get => _initialized; }
 
         private static int _gamePID;
         internal static int GamePID { get => _gamePID; }
 
-        private static readonly string _mainDir = AppDomain.CurrentDomain.BaseDirectory + "\\iFruitAddon2";
-        private static string _configFile = _mainDir + "\\config.ini";
+        private static readonly string _mainDir = $@"{AppDomain.CurrentDomain.BaseDirectory}\iFruitAddon2";
+        private static readonly string _configFile = $@"{_mainDir}\config.ini";
 
         private static string _tempFilePath;
 
@@ -60,15 +66,19 @@ namespace iFruitAddon2
 
         public iFruitAddon2()
         {
+            #if DEBUG
+            IsDebug = true;
+            #endif
+            
             Tick += Initialize;
-            Aborted += Dispose;
+            Aborted += OnAborted;
         }
 
         public static string GetTempFilePath()
         {
             if (!Directory.Exists(_mainDir))
             {
-                Logger.Log("Creating main directory.");
+                Logger.Debug("Creating main directory.");
                 Directory.CreateDirectory(_mainDir);
             }
 
@@ -79,58 +89,74 @@ namespace iFruitAddon2
         private void Initialize(object sender, EventArgs e)
         {
             // Get the process ID of the game and creating temp file
-            _tempFilePath = GetTempFilePath();
+            FileInfo sessionTmpFileInfo = new FileInfo(GetTempFilePath());
+            _tempFilePath = sessionTmpFileInfo.FullName;
 
             // Removing old temp files (if the game has crashed, the file were not deleted)
+            Logger.Debug("Removing old temp files...");
             foreach (string file in Directory.GetFiles(_mainDir, "*.tmp"))
             {
-                FileInfo tempFileInfo = new FileInfo(_tempFilePath), fileInfo = new FileInfo(file);
-                if ((tempFileInfo.Name != fileInfo.Name) && File.Exists(file))
+                FileInfo oldTmpFileInfo = new FileInfo(file);
+
+                // If the temp file is not the new one, delete it
+                if ((sessionTmpFileInfo.Name != oldTmpFileInfo.Name) && File.Exists(oldTmpFileInfo.FullName))
                 {
                     // Reset log file
                     Logger.ResetLogFile();
 
                     // Remove old temp file
                     File.Delete(file);
+                    Logger.Debug($"Removing {oldTmpFileInfo.FullName}");
                 }
             }
 
+            Logger.Debug("Waiting for game to be loaded...");
             while (Game.IsLoading)
             {
                 Yield();
             }
+            
+            Logger.Debug("Waiting for screen to fade...");
             while (GTA.UI.Screen.IsFadingIn)
             {
                 Yield();
             }
 
+            Logger.Debug("Loading config file");
             LoadConfigValues();
+            
+            Logger.Debug("Checking for updates...");
             if (CheckForUpdates)
-                if (IsUpdateAvailable()) NotifyNewUpdate();
+            {
+                // Async check for updates
+                Updater.CheckForUpdate();
+            }
 
             _initialized = true;
 
             Tick -= Initialize;
         }
 
-        private void Dispose(object sender, EventArgs e)
+        private void OnAborted(object sender, EventArgs e)
         {
             if (File.Exists(_tempFilePath))
             {
                 File.Delete(_tempFilePath);
             }
+
+            CustomiFruit.Instance?.CellphoneScaleform?.Dispose();
         }
 
         private void LoadConfigValues()
         {
             if (!Directory.Exists(_mainDir))
             {
-                Logger.Log("Creating main directory.");
+                Logger.Debug("Creating main directory.");
                 Directory.CreateDirectory(_mainDir);
             }
             if (!File.Exists(_configFile))
             {
-                Logger.Log("Creating config file.");
+                Logger.Debug("Creating config file.");
                 File.WriteAllText(_configFile, Properties.Resources.config);
             }
 
@@ -138,40 +164,6 @@ namespace iFruitAddon2
             contactIndex = Config.GetValue("General", "StartIndex", 40);
             CheckForUpdates = Config.GetValue("General", "CheckForUpdates", true);
         }
-
-        private bool IsUpdateAvailable()
-        {
-            string downloadedString = "";
-            Version onlineVersion;
-
-            try
-            {
-                WebClient client = new WebClient();
-                downloadedString = client.DownloadString("https://raw.githubusercontent.com/Bob74/iFruitAddon2/master/version");
-
-                downloadedString = downloadedString.Replace("\r", "");
-                downloadedString = downloadedString.Replace("\n", "");
-
-                onlineVersion = new Version(downloadedString);
-
-                client.Dispose();
-
-                if (onlineVersion.CompareTo(Assembly.GetExecutingAssembly().GetName().Version) > 0)
-                    return true;
-                else
-                    return false;
-            }
-            catch (Exception e)
-            {
-                Logger.Log("Error: IsUpdateAvailable - " + e.Message);
-            }
-
-            return false;
-        }
-
-        private void NotifyNewUpdate()
-        {
-            GTA.UI.Notification.Show("iFruitAddon2: A new update is available!", true);
-        }
+        
     }
 }
