@@ -25,7 +25,7 @@ public class iFruitAddon2Example : Script
         {
             DialTimeout = 4000,            // Delay before answering
             Active = true,                 // true = the contact is available and will answer the phone
-            Icon = ContactIcon.Blank      // Contact's icon
+            Icon = ContactIcon.Blank       // Contact's icon
         };
         contactA.Answered += ContactAnswered;   // Linking the Answered event with our function
         _iFruit.Contacts.Add(contactA);         // Add the contact to the phone
@@ -36,7 +36,7 @@ public class iFruitAddon2Example : Script
             DialTimeout = 4000,
             Active = false,                // false = the contact is busy
             Icon = ContactIcon.Blocked,
-            Bold = true                   // Set the contact name in bold
+            Bold = true                    // Set the contact name in bold
         };
         _iFruit.Contacts.Add(contactB);
 
@@ -53,7 +53,7 @@ public class iFruitAddon2Example : Script
     {
         // The contact has answered, we can execute our code
         GTA.UI.Notification.Show("The contact has answered.");
-		
+
         // We need to close the phone at a moment.
         // We can close it as soon as the contact pick up calling _iFruit.Close().
         // Here, we will close the phone in 5 seconds (5000ms).
