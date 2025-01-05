@@ -12,7 +12,15 @@ public class iFruitAddon2Example : Script
         // Custom phone creation
         _iFruit = new CustomiFruit();
 
-        // Phone customization (totally optional)
+        // Wallpaper customization
+        // Game phone wallpaper:
+        _iFruit.SetWallpaper(Wallpaper.Orange8Bit);
+        // Game texture wallpaper (ytd file)
+        // Warning: since we cannot choose the texture inside the texture dictionary, the game will take the texture that have the same name as the ytd file.
+        // ie: "prop_screen_dctl.ytd" file has a "prop_screen_dctl" texture inside it, so it will work.
+        _iFruit.SetWallpaper("prop_screen_dctl");
+
+        // Buttons customization
         _iFruit.LeftButtonColor = System.Drawing.Color.LimeGreen;
         _iFruit.CenterButtonColor = System.Drawing.Color.Orange;
         _iFruit.RightButtonColor = System.Drawing.Color.Purple;
