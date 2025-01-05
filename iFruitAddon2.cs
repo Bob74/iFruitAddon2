@@ -3,13 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using GTA;
 
-
-
 /*
     Changelog:
-        3.0.0 (xx/xx/2022): - Switch to ScriptHookVDotNet 3
-                            - Changed update system
-                            -
+        3.0.0 (05/01/2025): - Switch to ScriptHookVDotNet 3
+                            - Removed update notifications system
 
         2.1.0 (05/03/2018): - Changed the way contact index is stored to allow multiple mods to share the value (it wasn't working as expected).
                             - Added a "Bold" option to contacts. It sets the contact text in bold or not.
@@ -19,17 +16,8 @@ using GTA;
                             - At the moment, it is mandatory to close the phone in order to be compatible with RPH
 
         2.0.0 (28/01/2018): Initial release
-
-
-    TODO :
-    ------
-    - Supprimer la notification seulement si elle correspond à CELL_LEFT_SESS
-    - Téléphone qui se ferme quand on appel (CELL_LEFT_SESS) :
-        > Réouvrir le téléphone dans la foulée ?
-        > Pour éviter qu'il ne se ferme, il faudrait kill "appcontacts" avant d'appeler mais dans ce cas on ne peut plus se déplacer dans les contacts
-        > RPH : Reste ouvert sans icône de contact (appel d'un contact inconnu géré par RPH), impossible de fermer le téléphone sans le détruire et tuer les scripts
-    
 */
+
 namespace iFruitAddon2
 {
     class iFruitAddon2 : Script

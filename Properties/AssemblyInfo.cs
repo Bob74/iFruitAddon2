@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Bob_74 & CamxxCore")]
 [assembly: AssemblyProduct("iFruitAddon2")]
-[assembly: AssemblyCopyright("Copyright © Bob_74 & CamxxCore 2022")]
+[assembly: AssemblyCopyright("Copyright © Bob_74 & CamxxCore 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
