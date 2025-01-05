@@ -61,19 +61,19 @@ namespace iFruitAddon2
         }
         internal void Draw(int handle)
         {
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, handle, "SET_DATA_SLOT");
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, 2);
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, Index);
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, 0);
-            Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
-            Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, Name);
-            Function.Call(Hash._END_TEXT_COMPONENT);
-            Function.Call(Hash._BEGIN_TEXT_COMPONENT, "CELL_999");
-            Function.Call(Hash._END_TEXT_COMPONENT);
-            Function.Call(Hash._BEGIN_TEXT_COMPONENT, "CELL_2000");
-            Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, Icon.Name.SetBold(Bold));
-            Function.Call(Hash._END_TEXT_COMPONENT);
-            Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
+            Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, handle, "SET_DATA_SLOT");
+            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 2);
+            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, Index);
+            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 0);
+            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "STRING");
+            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Name);
+            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
+            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "CELL_999");
+            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
+            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "CELL_2000");
+            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Icon.Name.SetBold(Bold));
+            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
+            Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
         }
 
         internal void Update()
@@ -98,7 +98,7 @@ namespace iFruitAddon2
                 if (!Active)
                 {
                     // Contact is busy, play the busy sound until the busytimer runs off
-                    iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_220", Icon.Name.SetBold(Bold)); // Displays "BUSY"
+                    iFruitContactCollection.DisplayCallUI(CustomiFruit.Instance.Handle, Name, "CELL_220", Icon.Name.SetBold(Bold)); // Displays "BUSY"
                     _busySoundID = Function.Call<int>(Hash.GET_SOUND_ID);
                     Function.Call(Hash.PLAY_SOUND_FRONTEND, _busySoundID, "Remote_Engaged", "Phone_SoundSet_Default", 1);
                     _busyTimer = Game.GameTime + 5000;
@@ -106,7 +106,7 @@ namespace iFruitAddon2
                 }
                 else
                 {
-                    iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_219", Icon.Name.SetBold(Bold)); // Displays "CONNECTED"
+                    iFruitContactCollection.DisplayCallUI(CustomiFruit.Instance.Handle, Name, "CELL_219", Icon.Name.SetBold(Bold)); // Displays "CONNECTED"
                     OnAnswered(this); // Answer the phone
                 }
 
@@ -122,7 +122,9 @@ namespace iFruitAddon2
         {
             // Cannot call if already on call or contact is busy (Active == false)
             if (_dialActive || _busyActive)
+            {
                 return;
+            }
 
             Game.Player.Character.Task.UseMobilePhone();
 
@@ -130,7 +132,7 @@ namespace iFruitAddon2
             if (DialTimeout > 0)
             {
                 // Play the Dial sound
-                iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_220", Icon.Name.SetBold(Bold)); // Displays "BUSY"
+                iFruitContactCollection.DisplayCallUI(CustomiFruit.Instance.Handle, Name, "CELL_220", Icon.Name.SetBold(Bold)); // Displays "BUSY"
                 _dialSoundID = Function.Call<int>(Hash.GET_SOUND_ID);
                 Function.Call(Hash.PLAY_SOUND_FRONTEND, _dialSoundID, "Dial_and_Remote_Ring", "Phone_SoundSet_Default", 1);
                 _callTimer = Game.GameTime + DialTimeout;
@@ -138,7 +140,7 @@ namespace iFruitAddon2
             }
             else
             {
-                iFruitContactCollection.DisplayCallUI(CustomiFruit.GetCurrentInstance().Handle, Name, "CELL_219", Icon.Name.SetBold(Bold)); // Displays "CONNECTED"
+                iFruitContactCollection.DisplayCallUI(CustomiFruit.Instance.Handle, Name, "CELL_219", Icon.Name.SetBold(Bold)); // Displays "CONNECTED"
                 OnAnswered(this); // Answer the phone instantly
             }
         }
@@ -180,11 +182,11 @@ namespace iFruitAddon2
                     try
                     {
                         // We need to check if the file is unlocked and then get the value and write the new one.
-                        int index;
-
                         StreamReader sr = new StreamReader(tempFile);
-                        if (int.TryParse(sr.ReadLine().Trim(new char[] { '\r', '\n', ' ' }), out index))
+                        if (int.TryParse(sr.ReadLine().Trim(new char[] { '\r', '\n', ' ' }), out int index))
+                        {
                             iFruitAddon2.ContactIndex = index;
+                        }
                         sr.Close();
 
                         StreamWriter file = new StreamWriter(tempFile);
@@ -194,13 +196,13 @@ namespace iFruitAddon2
                     }
                     catch (IOException)
                     {
-                        // The file is locked when StreamReader or StreamWriter has opend it.
+                        // The file is locked when StreamReader or StreamWriter has opened it.
                         // The current instance of iFruitAddon2 must wait until the file is released.
                     }
                     catch (Exception ex)
                     {
                         // Unknown error occured
-                        Logger.Log(ex.Message);
+                        Logger.Exception(ex);
                         written = true;
                     }
                 }

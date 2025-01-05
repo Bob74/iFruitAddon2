@@ -9,11 +9,11 @@ namespace iFruitAddon2
     {
         public static int _currentIndex = 40;
         private bool _shouldDraw = true;
-        private int _mScriptHash;
+        private readonly int _scriptHash;
 
         public iFruitContactCollection()
         {
-            _mScriptHash = Game.GenerateHash("appcontacts");
+            _scriptHash = Game.GenerateHash("appcontacts");
         }
 
         
@@ -22,15 +22,19 @@ namespace iFruitAddon2
             int _selectedIndex = 0;
 
             // If we are in the Contacts menu
-            if (Function.Call<int>(Hash._GET_NUMBER_OF_INSTANCES_OF_STREAMED_SCRIPT, _mScriptHash) > 0)
+            if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, _scriptHash) > 0)
             {
                 _shouldDraw = true;
 
-                if (Game.IsControlPressed(2, Control.PhoneSelect))
+                if (Game.IsControlPressed(Control.PhoneSelect))
+                {
                     _selectedIndex = GetSelectedIndex(handle);  // We must use this function only when necessary since it contains Script.Wait(0)
+                }
             }
             else
+            {
                 _selectedIndex = -1;
+            }
 
             // Browsing every added contacts
             foreach (iFruitContact contact in this)
@@ -38,7 +42,9 @@ namespace iFruitAddon2
                 contact.Update(); // Update sounds or Answer call when _callTimer has ended.
 
                 if (_shouldDraw)
+                {
                     contact.Draw(handle);
+                }
 
                 if (_selectedIndex != -1 && _selectedIndex == contact.Index)
                 {
@@ -51,7 +57,6 @@ namespace iFruitAddon2
                     Script.Wait(10);
                     
                     RemoveActiveNotification();
-                    
                 }
 
             }
@@ -68,30 +73,30 @@ namespace iFruitAddon2
         /// <param name="picName"></param>
         public static void DisplayCallUI(int handle, string contactName, string statusText = "CELL_211", string picName = "CELL_300")
         {
-            string dialText = Game.GetGXTEntry(statusText); // "DIALING..." translated in current game's language
+            string dialText = Game.GetLocalizedString(statusText); // "DIALING..." translated in current game's language
 
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, handle, "SET_DATA_SLOT");
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, 4);
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, 0);
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, 3);
+            Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, handle, "SET_DATA_SLOT");
+            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 4);
+            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 0);
+            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 3);
 
-            Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
-            Function.Call(Hash._0x761B77454205A61D, contactName, -1);       //UI::_ADD_TEXT_COMPONENT_APP_TITLE
-            Function.Call(Hash._END_TEXT_COMPONENT);
+            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "STRING");
+            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PHONE_NUMBER, contactName, -1);       //UI::_ADD_TEXT_COMPONENT_APP_TITLE
+            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
 
-            Function.Call(Hash._BEGIN_TEXT_COMPONENT, "CELL_2000");
-            Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, picName);
-            Function.Call(Hash._END_TEXT_COMPONENT);
+            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "CELL_2000");
+            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, picName);
+            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
 
-            Function.Call(Hash._BEGIN_TEXT_COMPONENT, "STRING");
-            Function.Call(Hash._0x761B77454205A61D, dialText, -1);      //UI::_ADD_TEXT_COMPONENT_APP_TITLE
-            Function.Call(Hash._END_TEXT_COMPONENT);
+            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "STRING");
+            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PHONE_NUMBER, dialText, -1);      //UI::_ADD_TEXT_COMPONENT_APP_TITLE
+            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
 
-            Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
+            Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
 
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, handle, "DISPLAY_VIEW");
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_INT, 4);
-            Function.Call(Hash._POP_SCALEFORM_MOVIE_FUNCTION_VOID);
+            Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, handle, "DISPLAY_VIEW");
+            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 4);
+            Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
         }
 
         /// <summary>
@@ -101,11 +106,13 @@ namespace iFruitAddon2
         /// <returns></returns>
         internal int GetSelectedIndex(int handle)
         {
-            Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION, handle, "GET_CURRENT_SELECTION");
-            int num = Function.Call<int>(Hash._POP_SCALEFORM_MOVIE_FUNCTION);
-            while (!Function.Call<bool>(Hash._0x768FF8961BA904D6, num))         //UI::_GET_SCALEFORM_MOVIE_FUNCTION_RETURN_BOOL
+            Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, handle, "GET_CURRENT_SELECTION");
+            int num = Function.Call<int>(Hash.END_SCALEFORM_MOVIE_METHOD_RETURN_VALUE);
+            while (!Function.Call<bool>(Hash.IS_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_READY, num))
+            {
                 Script.Wait(0);
-            int data = Function.Call<int>(Hash._0x2DE7EFA66B906036, num);       //UI::_GET_SCALEFORM_MOVIE_FUNCTION_RETURN_INT
+            }
+            int data = Function.Call<int>(Hash.GET_SCALEFORM_MOVIE_METHOD_RETURN_VALUE_INT, num);
             return data;
         }
 
@@ -115,11 +122,12 @@ namespace iFruitAddon2
         /// </summary>
         internal void RemoveActiveNotification()
         {
-            Function.Call(Hash._SET_NOTIFICATION_TEXT_ENTRY, "STRING");
-            Function.Call(Hash._ADD_TEXT_COMPONENT_STRING, "temp");
-            int temp = Function.Call<int>(Hash._DRAW_NOTIFICATION, false, 1);
-            Function.Call(Hash._REMOVE_NOTIFICATION, temp);
-            Function.Call(Hash._REMOVE_NOTIFICATION, temp - 1);
+            // Spawning an empty notification
+            int notifId = GTA.UI.Notification.Show("");
+
+            // Removing the notification and the previous one
+            GTA.UI.Notification.Hide(notifId);
+            GTA.UI.Notification.Hide(notifId - 1);
         }
     }
 }
