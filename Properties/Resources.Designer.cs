@@ -63,7 +63,6 @@ namespace iFruitAddon2.Properties {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à [General]
         ///StartIndex=40
-        ///CheckForUpdates=true
         ///.
         /// </summary>
         internal static string config {

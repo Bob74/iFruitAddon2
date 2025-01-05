@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
-using System.Reflection;
 using GTA;
 
 
@@ -26,12 +24,6 @@ using GTA;
     TODO :
     ------
     - Supprimer la notification seulement si elle correspond à CELL_LEFT_SESS
-    X Permettre de choisir de mettre le contact en "Bold" (= nom du textureDictionary en minuscule)
-    
-    X Utiliser Game.GetGXTEntry au lieu de _GET_LABEL_TEXT
-
-    X Gérer les menus NativeUI en parallèle du téléphone => Possibilité de fermer le téléphone quand le script ouvre le menu
-    X Ajouter un timer dans la fonction Close() pour éviter d'avoir à gérer ça côté script
     - Téléphone qui se ferme quand on appel (CELL_LEFT_SESS) :
         > Réouvrir le téléphone dans la foulée ?
         > Pour éviter qu'il ne se ferme, il faudrait kill "appcontacts" avant d'appeler mais dans ce cas on ne peut plus se déplacer dans les contacts
@@ -61,8 +53,6 @@ namespace iFruitAddon2
         private static ScriptSettings _config;
         public static ScriptSettings Config { get => _config; private set => _config = value; }
 
-        private bool CheckForUpdates = true;
-
 
         public iFruitAddon2()
         {
@@ -88,6 +78,9 @@ namespace iFruitAddon2
 
         private void Initialize(object sender, EventArgs e)
         {
+            // Reset log file
+            Logger.ResetLogFile();
+            
             // Get the process ID of the game and creating temp file
             FileInfo sessionTmpFileInfo = new FileInfo(GetTempFilePath());
             _tempFilePath = sessionTmpFileInfo.FullName;
@@ -101,9 +94,6 @@ namespace iFruitAddon2
                 // If the temp file is not the new one, delete it
                 if ((sessionTmpFileInfo.Name != oldTmpFileInfo.Name) && File.Exists(oldTmpFileInfo.FullName))
                 {
-                    // Reset log file
-                    Logger.ResetLogFile();
-
                     // Remove old temp file
                     File.Delete(file);
                     Logger.Debug($"Removing {oldTmpFileInfo.FullName}");
@@ -125,13 +115,6 @@ namespace iFruitAddon2
             Logger.Debug("Loading config file");
             LoadConfigValues();
             
-            Logger.Debug("Checking for updates...");
-            if (CheckForUpdates)
-            {
-                // Async check for updates
-                Updater.CheckForUpdate();
-            }
-
             _initialized = true;
 
             Tick -= Initialize;
@@ -143,8 +126,6 @@ namespace iFruitAddon2
             {
                 File.Delete(_tempFilePath);
             }
-
-            CustomiFruit.Instance?.CellphoneScaleform?.Dispose();
         }
 
         private void LoadConfigValues()
@@ -162,7 +143,6 @@ namespace iFruitAddon2
 
             Config = ScriptSettings.Load(_configFile);
             contactIndex = Config.GetValue("General", "StartIndex", 40);
-            CheckForUpdates = Config.GetValue("General", "CheckForUpdates", true);
         }
         
     }

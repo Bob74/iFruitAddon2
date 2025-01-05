@@ -39,9 +39,9 @@ namespace iFruitAddon2
         private bool _shouldDraw = true;
         private PhoneImage _wallpaper;
         private iFruitContactCollection _contacts;
-        private readonly int _mScriptHash;
+        private readonly int _scriptHash = Game.GenerateHash("cellphone_flashhand");
         private int _timerClose = -1;
-        internal Scaleform CellphoneScaleform = null;
+        private Scaleform _cellphoneScaleform = null; // Scaleforms must be disposed when unused
 
         private readonly Dictionary<uint, string> _characterScaleformDict = new Dictionary<uint, string>() {
             { (uint)PedHash.Michael, "cellphone_ifruit" },
@@ -99,7 +99,6 @@ namespace iFruitAddon2
         {
             Instance = this;
             _contacts = contacts;
-            _mScriptHash = Game.GenerateHash("cellphone_flashhand");
         }
 
         /// <summary>
@@ -110,18 +109,18 @@ namespace iFruitAddon2
             get
             {
                 // If the scaleform is null, create it.
-                if (CellphoneScaleform == null)
+                if (_cellphoneScaleform == null)
                 {
                     if (_characterScaleformDict.ContainsKey((uint)Game.Player.Character.Model.Hash))
                     {
-                        CellphoneScaleform = new Scaleform(_characterScaleformDict[(uint)Game.Player.Character.Model.Hash]);
+                        _cellphoneScaleform = new Scaleform(_characterScaleformDict[(uint)Game.Player.Character.Model.Hash]);
                     }
                     else
                     {
-                        CellphoneScaleform = new Scaleform("cellphone_ifruit");
+                        _cellphoneScaleform = new Scaleform("cellphone_ifruit");
                     }
                 }
-                return CellphoneScaleform.Handle;
+                return _cellphoneScaleform.Handle;
             }
         }
 
@@ -145,7 +144,7 @@ namespace iFruitAddon2
         /// <param name="icon">Supplied icon</param>
         public void SetSoftKeyIcon(int buttonID, SoftKeyIcon icon)
         {
-            CellphoneScaleform.CallFunction("SET_SOFT_KEYS", buttonID, true, (int)icon);
+            _cellphoneScaleform.CallFunction("SET_SOFT_KEYS", buttonID, true, (int)icon);
         }
 
         /// <summary>
@@ -155,7 +154,7 @@ namespace iFruitAddon2
         /// <param name="color">Supplied color</param>
         public void SetSoftKeyColor(int buttonID, Color color)
         {
-            CellphoneScaleform.CallFunction("SET_SOFT_KEYS_COLOUR", buttonID, color.R, color.G, color.B);
+            _cellphoneScaleform.CallFunction("SET_SOFT_KEYS_COLOUR", buttonID, color.R, color.G, color.B);
         }
 
         internal void SetWallpaperTXD(string textureDict)
@@ -186,7 +185,7 @@ namespace iFruitAddon2
 
         public void Update()
         {
-            if (Function.Call<int>(Hash._GET_NUMBER_OF_REFERENCES_OF_SCRIPT_WITH_NAME_HASH, _mScriptHash) > 0)
+            if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, _scriptHash) > 0)
             {
                 if (_shouldDraw)
                 {
@@ -242,9 +241,9 @@ namespace iFruitAddon2
         }
         private void Close()
         {
-            if (Function.Call<int>(Hash._GET_NUMBER_OF_REFERENCES_OF_SCRIPT_WITH_NAME_HASH, _mScriptHash) > 0)
+            if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, _scriptHash) > 0)
             {
-                CellphoneScaleform.CallFunction("SHUTDOWN_MOVIE");
+                _cellphoneScaleform.CallFunction("SHUTDOWN_MOVIE");
 
                 Script.Yield();
 

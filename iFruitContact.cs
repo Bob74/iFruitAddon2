@@ -122,7 +122,9 @@ namespace iFruitAddon2
         {
             // Cannot call if already on call or contact is busy (Active == false)
             if (_dialActive || _busyActive)
+            {
                 return;
+            }
 
             Game.Player.Character.Task.UseMobilePhone();
 
@@ -194,7 +196,7 @@ namespace iFruitAddon2
                     }
                     catch (IOException)
                     {
-                        // The file is locked when StreamReader or StreamWriter has opend it.
+                        // The file is locked when StreamReader or StreamWriter has opened it.
                         // The current instance of iFruitAddon2 must wait until the file is released.
                     }
                     catch (Exception ex)

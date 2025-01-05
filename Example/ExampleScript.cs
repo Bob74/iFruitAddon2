@@ -3,11 +3,11 @@
 using GTA;
 using iFruitAddon2;
 
-public class ExampleScript : Script
+public class iFruitAddon2Example : Script
 {
     CustomiFruit _iFruit;
 
-    public ExampleScript()
+    public iFruitAddon2Example()
     {
         // Custom phone creation
         _iFruit = new CustomiFruit();
@@ -50,8 +50,8 @@ public class ExampleScript : Script
     private void ContactAnswered(iFruitContact contact)
     {
         // The contact has answered, we can execute our code
-        UI.Notify("The contact has answered.");
-
+        GTA.UI.Notification.Show("The contact has answered.");
+		
         // We need to close the phone at a moment.
         // We can close it as soon as the contact pick up calling _iFruit.Close().
         // Here, we will close the phone in 5 seconds (5000ms).

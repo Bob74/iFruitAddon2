@@ -9,11 +9,11 @@ namespace iFruitAddon2
     {
         public static int _currentIndex = 40;
         private bool _shouldDraw = true;
-        private readonly int _mScriptHash;
+        private readonly int _scriptHash;
 
         public iFruitContactCollection()
         {
-            _mScriptHash = Game.GenerateHash("appcontacts");
+            _scriptHash = Game.GenerateHash("appcontacts");
         }
 
         
@@ -22,7 +22,7 @@ namespace iFruitAddon2
             int _selectedIndex = 0;
 
             // If we are in the Contacts menu
-            if (Function.Call<int>(Hash._GET_NUMBER_OF_REFERENCES_OF_SCRIPT_WITH_NAME_HASH, _mScriptHash) > 0)
+            if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, _scriptHash) > 0)
             {
                 _shouldDraw = true;
 
