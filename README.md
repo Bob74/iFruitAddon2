@@ -30,4 +30,3 @@ If you are used to iFruitAddon, you will see two main differences:
 * Updated list of phone contact's pictures.
 * Displays **CONNECTED** on the phone's UI when the contact has answered.
 * Automatically localized texts ("DIALING...", "BUSY...", "CONNECTED", etc.).
-* Checks if **iFruitAddon2**'s updates are available when the game starts.
