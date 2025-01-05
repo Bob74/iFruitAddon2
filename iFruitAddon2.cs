@@ -7,6 +7,7 @@ using GTA;
     Changelog:
         3.0.0 (05/01/2025): - Switch to ScriptHookVDotNet 3
                             - Removed update notifications system
+                            - Usage of Path.Combine() to generate file path
 
         2.1.0 (05/03/2018): - Changed the way contact index is stored to allow multiple mods to share the value (it wasn't working as expected).
                             - Added a "Bold" option to contacts. It sets the contact text in bold or not.
@@ -30,8 +31,8 @@ namespace iFruitAddon2
         private static int _gamePID;
         internal static int GamePID { get => _gamePID; }
 
-        private static readonly string _mainDir = $@"{AppDomain.CurrentDomain.BaseDirectory}\iFruitAddon2";
-        private static readonly string _configFile = $@"{_mainDir}\config.ini";
+        private static readonly string _mainDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "iFruitAddon2");
+        private static readonly string _configFile = Path.Combine(_mainDir, "config.ini");
 
         private static string _tempFilePath;
 
@@ -61,7 +62,8 @@ namespace iFruitAddon2
             }
 
             _gamePID = Process.GetProcessesByName("GTA5")[0]?.Id ?? 0;
-            return _mainDir + "\\" + _gamePID.ToString() + ".tmp";
+
+            return Path.Combine(_mainDir, _gamePID.ToString() + ".tmp");
         }
 
         private void Initialize(object sender, EventArgs e)
