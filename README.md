@@ -11,7 +11,7 @@ This is a developer resource, it allows you to handle the game's phone in order 
 
 ## Installation
 - Requires [ScriptHookVDotNet](https://github.com/crosire/scripthookvdotnet/releases) v3
-- Put the file in your **GTA V\scripts directory**
+- Put the file like any other SHVDN scripts in your `GTA V\scripts` directory
 
 ## How to use (developper)
 * Reference `iFruitAddon2.ddl` in your project.
