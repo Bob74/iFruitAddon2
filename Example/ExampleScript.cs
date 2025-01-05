@@ -5,7 +5,7 @@ using iFruitAddon2;
 
 public class iFruitAddon2Example : Script
 {
-    CustomiFruit _iFruit;
+    readonly CustomiFruit _iFruit;
 
     public iFruitAddon2Example()
     {
@@ -13,29 +13,31 @@ public class iFruitAddon2Example : Script
         _iFruit = new CustomiFruit();
 
         // Phone customization (totally optional)
-        /*
-        _iFruit.CenterButtonColor = System.Drawing.Color.Orange;
         _iFruit.LeftButtonColor = System.Drawing.Color.LimeGreen;
+        _iFruit.CenterButtonColor = System.Drawing.Color.Orange;
         _iFruit.RightButtonColor = System.Drawing.Color.Purple;
-        _iFruit.CenterButtonIcon = SoftKeyIcon.Fire;
         _iFruit.LeftButtonIcon = SoftKeyIcon.Police;
+        _iFruit.CenterButtonIcon = SoftKeyIcon.Fire;
         _iFruit.RightButtonIcon = SoftKeyIcon.Website;
-        */
 
         // New contact (wait 4 seconds (4000ms) before picking up the phone)
-        iFruitContact contactA = new iFruitContact("Test contact");
+        iFruitContact contactA = new iFruitContact("Test contact")
+        {
+            DialTimeout = 4000,            // Delay before answering
+            Active = true,                 // true = the contact is available and will answer the phone
+            Icon = ContactIcon.Blank      // Contact's icon
+        };
         contactA.Answered += ContactAnswered;   // Linking the Answered event with our function
-        contactA.DialTimeout = 4000;            // Delay before answering
-        contactA.Active = true;                 // true = the contact is available and will answer the phone
-        contactA.Icon = ContactIcon.Blank;      // Contact's icon
         _iFruit.Contacts.Add(contactA);         // Add the contact to the phone
 
         // New contact (wait 4 seconds before displaying "Busy...")
-        iFruitContact contactB = new iFruitContact("Test contact 2");
-        contactB.DialTimeout = 4000;
-        contactB.Active = false;                // false = the contact is busy
-        contactB.Icon = ContactIcon.Blocked;
-        contactB.Bold = true;                   // Set the contact name in bold
+        iFruitContact contactB = new iFruitContact("Test contact 2")
+        {
+            DialTimeout = 4000,
+            Active = false,                // false = the contact is busy
+            Icon = ContactIcon.Blocked,
+            Bold = true                   // Set the contact name in bold
+        };
         _iFruit.Contacts.Add(contactB);
 
         Tick += OnTick;

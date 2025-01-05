@@ -154,7 +154,7 @@ namespace iFruitAddon2
         /// <param name="color">Supplied color</param>
         public void SetSoftKeyColor(int buttonID, Color color)
         {
-            _cellphoneScaleform.CallFunction("SET_SOFT_KEYS_COLOUR", buttonID, color.R, color.G, color.B);
+            _cellphoneScaleform.CallFunction("SET_SOFT_KEYS_COLOUR", buttonID, (int)color.R, (int)color.G, (int)color.B);
         }
 
         internal void SetWallpaperTXD(string textureDict)
