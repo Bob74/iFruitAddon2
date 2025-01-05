@@ -138,7 +138,7 @@ namespace iFruitAddon2
         }
 
         /// <summary>
-        /// Set icon of the soft key buttons directly.
+        /// Set icon of the soft key buttons directly. Must be called every update!
         /// </summary>
         /// <param name="buttonID">The button index</param>
         /// <param name="icon">Supplied icon</param>
@@ -187,31 +187,29 @@ namespace iFruitAddon2
         {
             if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, _scriptHash) > 0)
             {
+                // Must always be called when the phone is on screen
+                if (LeftButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(1, LeftButtonIcon);
+                if (CenterButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(2, CenterButtonIcon);
+                if (RightButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(3, RightButtonIcon);
+                
+                // Need to be called once when phone is on screen
                 if (_shouldDraw)
                 {
-                    //Script.Wait(0);
-
                     if (LeftButtonColor != Color.Empty) SetSoftKeyColor(1, LeftButtonColor);
                     if (CenterButtonColor != Color.Empty) SetSoftKeyColor(2, CenterButtonColor);
                     if (RightButtonColor != Color.Empty) SetSoftKeyColor(3, RightButtonColor);
 
-                    //Script.Wait(0);
-
-                    if (LeftButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(1, LeftButtonIcon);
-                    if (CenterButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(2, CenterButtonIcon);
-                    if (RightButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(3, RightButtonIcon);
-                    
                     if (_wallpaper != null) SetWallpaperTXD(_wallpaper.Name);
 
                     _shouldDraw = !_shouldDraw;
-                }  
+                }
             }
             else
             {
+                // When the phone is closed, we set the next time it opens to draw custom elements
                 _shouldDraw = true;
             }
 
-            
             if (_timerClose != -1)
             {
                 if (_timerClose <= Game.GameTime)
