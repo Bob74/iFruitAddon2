@@ -11,7 +11,7 @@ namespace iFruitAddon2
         { }
 
         // Full list:
-        // https://wiki.gtanet.work/index.php?title=Notification_Pictures
+        // https://github.com/scripthookvdotnet/scripthookvdotnet/tree/main/source/scripting_v3/GTA.UI/Notification.cs
         //
         public static ContactIcon Generic { get { return new ContactIcon("CHAR_DEFAULT"); } }
         public static ContactIcon Abigail { get { return new ContactIcon("CHAR_ABIGAIL"); } }
