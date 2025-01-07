@@ -78,7 +78,7 @@ namespace iFruitAddon2
             Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 3);
 
             Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "STRING");
-            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PHONE_NUMBER, contactName, -1);       //UI::_ADD_TEXT_COMPONENT_APP_TITLE
+            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PHONE_NUMBER, contactName, -1);
             Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
 
             Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "CELL_2000");
@@ -86,7 +86,7 @@ namespace iFruitAddon2
             Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
 
             Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "STRING");
-            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PHONE_NUMBER, dialText, -1);      //UI::_ADD_TEXT_COMPONENT_APP_TITLE
+            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PHONE_NUMBER, dialText, -1);
             Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
 
             Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
