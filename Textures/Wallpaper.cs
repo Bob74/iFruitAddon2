@@ -25,7 +25,7 @@ namespace iFruitAddon2
         public static Wallpaper BlueCircles { get { return new Wallpaper("Phone_Wallpaper_bluecircles"); } }
         public static Wallpaper Diamonds { get { return new Wallpaper("Phone_Wallpaper_diamonds"); } }
         public static Wallpaper GreenGlow { get { return new Wallpaper("Phone_Wallpaper_greenglow"); } }
-        public static Wallpaper Orange8Bit { get { return new Wallpaper("Phone_Wallpaper_orange8bit"); } }    
+        public static Wallpaper Orange8Bit { get { return new Wallpaper("Phone_Wallpaper_orange8bit"); } }
         public static Wallpaper OrangeTriangles { get { return new Wallpaper("Phone_Wallpaper_orangetriangles"); } }
         public static Wallpaper PurpleTartan { get { return new Wallpaper("Phone_Wallpaper_purpletartan"); } }
     }

@@ -1,8 +1,7 @@
-﻿using System.Drawing;
-using System.Collections.Generic;
-
-using GTA;
+﻿using GTA;
 using GTA.Native;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace iFruitAddon2
 {
@@ -191,7 +190,7 @@ namespace iFruitAddon2
                 if (LeftButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(1, LeftButtonIcon);
                 if (CenterButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(2, CenterButtonIcon);
                 if (RightButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(3, RightButtonIcon);
-                
+
                 // Need to be called once when phone is on screen
                 if (_shouldDraw)
                 {
