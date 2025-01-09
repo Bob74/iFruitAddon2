@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("iFruitAddon2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("GTA V SHVDN3 library to interact with the iFruit phone.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Bob_74 & CamxxCore")]
+[assembly: AssemblyCompany("Bob_74 and CamxxCore")]
 [assembly: AssemblyProduct("iFruitAddon2")]
-[assembly: AssemblyCopyright("Copyright © Bob_74 & CamxxCore 2025")]
+[assembly: AssemblyCopyright("Copyright © Bob_74 and CamxxCore 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

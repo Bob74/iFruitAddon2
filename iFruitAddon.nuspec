@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/Bob74/iFruitAddon2</projectUrl>
+    <description>$description$</description>
+    <releaseNotes>Updated for SHVDN 3.</releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags>ifruit ifruitaddon ifruitaddon2 gta gtav mod library</tags>
+  </metadata>
+  <files>
+    <file src="README.md" target="." />
+  </files>
+</package>
