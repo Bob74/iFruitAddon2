@@ -13,8 +13,14 @@
     <releaseNotes>Updated for SHVDN 3.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>ifruit ifruitaddon ifruitaddon2 gta gtav mod library</tags>
+	<dependencies>
+	  <dependency id="ScriptHookVDotNet3" version="[3.0,4.0)" />
+	</dependencies>
   </metadata>
   <files>
     <file src="README.md" target="." />
+    <file src="doc\phone1.png" target="." />
+    <file src="doc\phone2.png" target="." />
+    <file src="doc\phone3.png" target="." />
   </files>
 </package>

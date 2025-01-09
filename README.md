@@ -2,11 +2,11 @@
 Updated version of the original [iFruitAddon](https://github.com/CamxxCore/iFruitAddon) by **CamxxCore**.  
 This is a developer resource, it allows you to handle the game's phone in order to add contacts, change the button's appearance, wallpaper and more!
 
-![screen1](../phone1.png)
-![screen2](../phone2.png)
+![screen1](https://raw.githubusercontent.com/Bob74/iFruitAddon2/refs/heads/master/doc/phone1.png)
+![screen2](https://raw.githubusercontent.com/Bob74/iFruitAddon2/refs/heads/master/doc/phone2.png)
 
 
-![screen3](../phone3.png)
+![screen3](https://raw.githubusercontent.com/Bob74/iFruitAddon2/refs/heads/master/doc/phone3.png)
 
 
 ## Installation
