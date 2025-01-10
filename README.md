@@ -1,12 +1,15 @@
+[![GitHub Release](https://img.shields.io/github/v/release/Bob74/iFruitAddon2?logo=github&label=Release&cacheSeconds=3600)](https://github.com/Bob74/iFruitAddon2/releases)
+[![NuGet Downloads](https://img.shields.io/nuget/v/iFruitAddon2?logo=nuget&label=NuGet&cacheSeconds=3600)](https://www.nuget.org/packages/iFruitAddon2)
+
 # iFruitAddon2
 Updated version of the original [iFruitAddon](https://github.com/CamxxCore/iFruitAddon) by **CamxxCore**.  
 This is a developer resource, it allows you to handle the game's phone in order to add contacts, change the button's appearance, wallpaper and more!
 
-![screen1](https://github.com/user-attachments/assets/5cfe620e-09bc-448a-9314-8a5af4ab76f2)
-![screen2](https://github.com/user-attachments/assets/0432c4b4-c388-4fc8-8bce-9ffb05580d76)
+![screen1](https://raw.githubusercontent.com/Bob74/iFruitAddon2/refs/heads/master/doc/phone1.png)
+![screen2](https://raw.githubusercontent.com/Bob74/iFruitAddon2/refs/heads/master/doc/phone2.png)
 
 
-![screen3](https://github.com/user-attachments/assets/8850d8d9-d419-4684-a751-a18a6f874f13)
+![screen3](https://raw.githubusercontent.com/Bob74/iFruitAddon2/refs/heads/master/doc/phone3.png)
 
 
 ## Installation
