@@ -3,3 +3,4 @@
 /.vs
 *.dll
 *.nupkg
+MAKE-NUGET.md

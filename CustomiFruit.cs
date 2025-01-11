@@ -187,6 +187,7 @@ namespace iFruitAddon2
             if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, _scriptHash) > 0)
             {
                 // Must always be called when the phone is on screen
+                Script.Wait(0);
                 if (LeftButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(1, LeftButtonIcon);
                 if (CenterButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(2, CenterButtonIcon);
                 if (RightButtonIcon != SoftKeyIcon.Blank) SetSoftKeyIcon(3, RightButtonIcon);
@@ -194,11 +195,11 @@ namespace iFruitAddon2
                 // Need to be called once when phone is on screen
                 if (_shouldDraw)
                 {
+                    Script.Wait(0);
+                    if (_wallpaper != null) SetWallpaperTXD(_wallpaper.Name);
                     if (LeftButtonColor != Color.Empty) SetSoftKeyColor(1, LeftButtonColor);
                     if (CenterButtonColor != Color.Empty) SetSoftKeyColor(2, CenterButtonColor);
                     if (RightButtonColor != Color.Empty) SetSoftKeyColor(3, RightButtonColor);
-
-                    if (_wallpaper != null) SetWallpaperTXD(_wallpaper.Name);
 
                     _shouldDraw = !_shouldDraw;
                 }
