@@ -37,7 +37,7 @@ namespace iFruitAddon2
             Aborted += OnAborted;
         }
 
-        public static string GetTempFilePath()
+        internal static string GetTempFilePath()
         {
             if (!Directory.Exists(_mainDir))
             {

@@ -11,31 +11,31 @@ namespace iFruitAddon2
     {
         private static readonly string logFileName = "iFruitAddon2.log";
 
-        public static void ResetLogFile()
+        internal static void ResetLogFile()
         {
             FileStream fs = File.Create(logFileName);
             fs.Close();
         }
-        public static void Debug(object message)
+        internal static void Debug(object message)
         {
             if (iFruitAddon2.IsDebug)
             {
                 Log("Debug - " + Tools.GetCurrentMethod(1) + " " + message);
             }
         }
-        public static void Info(object message)
+        internal static void Info(object message)
         {
             Log("Info - " + message);
         }
-        public static void Warning(object message)
+        internal static void Warning(object message)
         {
             Log("Warning - " + message);
         }
-        public static void Error(object message)
+        internal static void Error(object message)
         {
             Log("Error - " + Tools.GetCurrentMethod(1) + " " + message);
         }
-        public static void Exception(Exception ex)
+        internal static void Exception(Exception ex)
         {
             Log("Exception - " + ex.Message + Environment.NewLine + ex.StackTrace);
         }

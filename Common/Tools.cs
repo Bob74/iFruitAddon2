@@ -5,16 +5,16 @@ using System.Runtime.CompilerServices;
 
 namespace iFruitAddon2
 {
-    public static class Helper
+    internal static class Helper
     {
-        public static string SetBold(this string text, bool bold)
+        internal static string SetBold(this string text, bool bold)
         {
             if (bold) return text.ToLower();
             else return text.ToUpper();
         }
     }
 
-    public static class Tools
+    internal static class Tools
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static string GetCurrentMethod(int offset = 0)
