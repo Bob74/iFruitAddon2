@@ -1,23 +1,7 @@
-﻿using System;
+﻿using GTA;
+using System;
 using System.Diagnostics;
 using System.IO;
-using GTA;
-
-/*
-    Changelog:
-        3.0.0 (05/01/2025): - Switch to ScriptHookVDotNet 3
-                            - Removed update notifications system
-                            - Usage of Path.Combine() to generate file path
-
-        2.1.0 (05/03/2018): - Changed the way contact index is stored to allow multiple mods to share the value (it wasn't working as expected).
-                            - Added a "Bold" option to contacts. It sets the contact text in bold or not.
-                            - New contacts font is not bold by default anymore. It is now the same as native contacts.
-
-        2.0.1 (30/01/2018): - Possible to close the phone (if the contact opens a menu, avoid using controls to navigate in the menu AND in the phone)
-                            - At the moment, it is mandatory to close the phone in order to be compatible with RPH
-
-        2.0.0 (28/01/2018): Initial release
-*/
 
 namespace iFruitAddon2
 {
@@ -45,15 +29,15 @@ namespace iFruitAddon2
 
         public iFruitAddon2()
         {
-            #if DEBUG
+#if DEBUG
             IsDebug = true;
-            #endif
-            
+#endif
+
             Tick += Initialize;
             Aborted += OnAborted;
         }
 
-        public static string GetTempFilePath()
+        internal static string GetTempFilePath()
         {
             if (!Directory.Exists(_mainDir))
             {
@@ -70,7 +54,7 @@ namespace iFruitAddon2
         {
             // Reset log file
             Logger.ResetLogFile();
-            
+
             // Get the process ID of the game and creating temp file
             FileInfo sessionTmpFileInfo = new FileInfo(GetTempFilePath());
             _tempFilePath = sessionTmpFileInfo.FullName;
@@ -95,7 +79,7 @@ namespace iFruitAddon2
             {
                 Yield();
             }
-            
+
             Logger.Debug("Waiting for screen to fade...");
             while (GTA.UI.Screen.IsFadingIn)
             {
@@ -104,7 +88,7 @@ namespace iFruitAddon2
 
             Logger.Debug("Loading config file");
             LoadConfigValues();
-            
+
             _initialized = true;
 
             Tick -= Initialize;
@@ -134,6 +118,6 @@ namespace iFruitAddon2
             Config = ScriptSettings.Load(_configFile);
             contactIndex = Config.GetValue("General", "StartIndex", 40);
         }
-        
+
     }
 }
