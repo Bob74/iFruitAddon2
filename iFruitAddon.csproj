@@ -49,8 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="iFruitAddon2.cs" />
+    <Compile Include="Phone\PhoneScript.cs" />
     <Compile Include="Textures\ContactIcon.cs" />
-    <Compile Include="CustomiFruit.cs" />
+    <Compile Include="Phone\CustomiFruit.cs" />
     <Compile Include="Contacts\iFruitContact.cs" />
     <Compile Include="Contacts\iFruitContactCollection.cs" />
     <Compile Include="Textures\PhoneImage.cs" />
