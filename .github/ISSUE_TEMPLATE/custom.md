@@ -8,16 +8,20 @@ assignees: ''
 ---
 
 ## What version of iFruitAddon2 are you using?
-_Ex: 1.0.0_
+_ie: 1.0.0_
 
 ## Content of the log file `Grand Theft Auto V\ScriptHookVDotNet.log`
 <details><summary>ScriptHookVDotNet.log</summary>
-_Paste the content of ScriptHookVDotNet.log here._
+
+  ==> Paste the content of ScriptHookVDotNet.log here.
+
 </details>
 
 ## Content of the log file `Grand Theft Auto V\iFruitAddon2.log`
 <details><summary>iFruitAddon2.log</summary>
-_Paste the content of iFruitAddon2.log here._
+
+  ==> Paste the content of iFruitAddon2.log here.
+  
 </details>
 
 ## A clear and concise description of what the problem is.
