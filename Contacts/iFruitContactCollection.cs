@@ -12,7 +12,9 @@ namespace iFruitAddon2
 
         public iFruitContactCollection()
         {
+            Logger.Debug("Initializing new iFruitContactCollection...");
             _scriptHash = Game.GenerateHash("appcontacts");
+            Logger.Debug("iFruitContactCollection initialized!");
         }
 
         internal void Update(int handle)
@@ -26,7 +28,9 @@ namespace iFruitAddon2
 
                 if (Game.IsControlPressed(Control.PhoneSelect))
                 {
+                    Logger.Debug("Reading the index of the selected contact...");
                     _selectedIndex = GetSelectedIndex(handle);  // We must use this function only when necessary since it contains Script.Wait(0)
+                    Logger.Debug("Selected contact: " + _selectedIndex);
                 }
             }
             else
@@ -46,15 +50,22 @@ namespace iFruitAddon2
 
                 if (_selectedIndex != -1 && _selectedIndex == contact.Index)
                 {
+                    Logger.Debug("Contact has been selected for calling");
+
                     // Prevent original contact to be called
                     Tools.Scripts.TerminateScript("appcontacts");
+                    Logger.Debug("Script killed!");
 
+                    Logger.Debug("Calling contact...");
                     contact.Call();
                     DisplayCallUI(handle, contact.Name, "CELL_211", contact.Icon.Name.SetBold(contact.Bold));
+                    Logger.Debug("Contact called!");
 
                     Script.Wait(10);
 
+                    Logger.Debug("Removing notification...");
                     RemoveActiveNotification();
+                    Logger.Debug("Notification removed!");
                 }
 
             }

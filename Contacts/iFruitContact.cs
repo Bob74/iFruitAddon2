@@ -80,7 +80,15 @@ namespace iFruitAddon2
             // Contact was busy and busytimer has ended
             if (_busyActive && Game.GameTime > _busyTimer)
             {
-                Game.Player.Character.Task.PutAwayMobilePhone();
+                if (iFruitAddon2.IsEnhanced)
+                {
+                    Tools.Game.TaskPutAwayMobilePhone();
+                }
+                else
+                {
+                    Game.Player.Character.Task.PutAwayMobilePhone();
+                }
+
                 Function.Call(Hash.STOP_SOUND, _busySoundID);
                 Function.Call(Hash.RELEASE_SOUND_ID, _busySoundID);
                 _busySoundID = -1;
@@ -122,20 +130,31 @@ namespace iFruitAddon2
             // Cannot call if already on call or contact is busy (Active == false)
             if (_dialActive || _busyActive)
             {
+                Logger.Debug("Canceling call (already on call or contact is busy)");
                 return;
             }
 
-            Game.Player.Character.Task.UseMobilePhone();
+            Logger.Debug("Player play task UseMobilePhone");
+            if (iFruitAddon2.IsEnhanced)
+            {
+                Tools.Game.TaskUseMobilePhone();
+            }
+            else
+            {
+                Game.Player.Character.Task.UseMobilePhone();
+            }
 
             // Do we have to wait before the contact pickup the phone?
             if (DialTimeout > 0)
             {
                 // Play the Dial sound
+                Logger.Debug("Playing dial sound...");
                 iFruitContactCollection.DisplayCallUI(CustomiFruit.Instance.Handle, Name, "CELL_220", Icon.Name.SetBold(Bold)); // Displays "BUSY"
                 _dialSoundID = Function.Call<int>(Hash.GET_SOUND_ID);
                 Function.Call(Hash.PLAY_SOUND_FRONTEND, _dialSoundID, "Dial_and_Remote_Ring", "Phone_SoundSet_Default", 1);
                 _callTimer = Game.GameTime + DialTimeout;
                 _dialActive = true;
+                Logger.Debug("Sound played!");
             }
             else
             {

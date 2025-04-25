@@ -15,8 +15,11 @@ namespace iFruitAddon2
 
         internal static Scaleform GetCurrentScaleform()
         {
-            PedHash currentPlayerHash = (PedHash)Game.Player.Character.Model.Hash;
             Scaleform currentPhoneScaleform;
+            PedHash currentPlayerHash = PedHash.Michael;
+
+            currentPlayerHash = iFruitAddon2.IsEnhanced ? Tools.Game.GetPlayerPedModelHash() : (PedHash)Game.Player.Character.Model.Hash;
+
             if (_characterScaleformDict.ContainsKey(currentPlayerHash))
             {
                 currentPhoneScaleform = new Scaleform(_characterScaleformDict[currentPlayerHash]);
@@ -26,6 +29,7 @@ namespace iFruitAddon2
                 currentPhoneScaleform = new Scaleform(_characterScaleformDict[PedHash.Michael]);
             }
             while (!currentPhoneScaleform.IsLoaded) Script.Yield();
+
             return currentPhoneScaleform;
         }
 

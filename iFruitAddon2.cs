@@ -12,9 +12,6 @@ namespace iFruitAddon2
         private static bool _initialized = false;
         internal static bool Initialized { get => _initialized; }
 
-        private static int _gamePID;
-        internal static int GamePID { get => _gamePID; }
-
         private static readonly string _mainDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "iFruitAddon2");
         private static readonly string _configFile = Path.Combine(_mainDir, "config.ini");
 
@@ -25,6 +22,9 @@ namespace iFruitAddon2
 
         private static ScriptSettings _config;
         public static ScriptSettings Config { get => _config; private set => _config = value; }
+
+        private static bool _isEnhanced = false;
+        public static bool IsEnhanced { get => _isEnhanced; private set => _isEnhanced = value; }
 
 
         public iFruitAddon2()
@@ -41,13 +41,13 @@ namespace iFruitAddon2
         {
             if (!Directory.Exists(_mainDir))
             {
-                Logger.Debug("Creating main directory.");
+                Logger.Debug(_mainDir + " does not exists");
+                Logger.Debug("Creating main directory");
                 Directory.CreateDirectory(_mainDir);
             }
 
-            _gamePID = Process.GetProcessesByName("GTA5")[0]?.Id ?? 0;
-
-            return Path.Combine(_mainDir, _gamePID.ToString() + ".tmp");
+            // Must be unique for the session but common to all mods adding contacts
+            return Path.Combine(_mainDir, Process.GetCurrentProcess().Id.ToString() + ".tmp");
         }
 
         private void Initialize(object sender, EventArgs e)
@@ -55,39 +55,30 @@ namespace iFruitAddon2
             // Reset log file
             Logger.ResetLogFile();
 
-            // Get the process ID of the game and creating temp file
-            FileInfo sessionTmpFileInfo = new FileInfo(GetTempFilePath());
-            _tempFilePath = sessionTmpFileInfo.FullName;
+            // Detecting Enhanced version
+            _isEnhanced = Process.GetCurrentProcess().ProcessName.ToLower().Contains("enhanced");
 
             // Removing old temp files (if the game has crashed, the file were not deleted)
             Logger.Debug("Removing old temp files...");
             foreach (string file in Directory.GetFiles(_mainDir, "*.tmp"))
             {
-                FileInfo oldTmpFileInfo = new FileInfo(file);
-
-                // If the temp file is not the new one, delete it
-                if ((sessionTmpFileInfo.Name != oldTmpFileInfo.Name) && File.Exists(oldTmpFileInfo.FullName))
+                if (File.Exists(new FileInfo(file).FullName))
                 {
                     // Remove old temp file
                     File.Delete(file);
-                    Logger.Debug($"Removing {oldTmpFileInfo.FullName}");
+                    Logger.Debug($"Removing {file}");
                 }
             }
 
-            Logger.Debug("Waiting for game to be loaded...");
-            while (Game.IsLoading)
-            {
-                Yield();
-            }
+            // Get the process ID of the game and creating temp file
+            Logger.Debug("Getting process ID and creating temp file...");
+            FileInfo sessionTmpFileInfo = new FileInfo(GetTempFilePath());
+            _tempFilePath = sessionTmpFileInfo.FullName;
+            Logger.Debug("Temp file created: " + _tempFilePath);
 
-            Logger.Debug("Waiting for screen to fade...");
-            while (GTA.UI.Screen.IsFadingIn)
-            {
-                Yield();
-            }
-
-            Logger.Debug("Loading config file");
+            Logger.Debug("Begin loading config file...");
             LoadConfigValues();
+            Logger.Debug("Config file loaded!");
 
             _initialized = true;
 
@@ -96,9 +87,12 @@ namespace iFruitAddon2
 
         private void OnAborted(object sender, EventArgs e)
         {
+            Logger.Debug("Closing...");
             if (File.Exists(_tempFilePath))
             {
+                Logger.Debug("Removing " + _tempFilePath);
                 File.Delete(_tempFilePath);
+                Logger.Debug("File removed: " + _tempFilePath);
             }
         }
 
@@ -106,17 +100,21 @@ namespace iFruitAddon2
         {
             if (!Directory.Exists(_mainDir))
             {
-                Logger.Debug("Creating main directory.");
+                Logger.Debug("Creating main directory");
                 Directory.CreateDirectory(_mainDir);
             }
             if (!File.Exists(_configFile))
             {
-                Logger.Debug("Creating config file.");
+                Logger.Debug("Creating config file");
                 File.WriteAllText(_configFile, Properties.Resources.config);
             }
 
+            Logger.Debug("Loading config file");
             Config = ScriptSettings.Load(_configFile);
+
+            Logger.Debug("Reading contact index...");
             contactIndex = Config.GetValue("General", "StartIndex", 40);
+            Logger.Debug("Contact index: " + contactIndex.ToString());
         }
 
     }

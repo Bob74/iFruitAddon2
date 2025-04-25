@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace iFruitAddon2
 {
-    internal static class Helper
+    internal static class Extensions
     {
         internal static string SetBold(this string text, bool bold)
         {
@@ -23,6 +23,27 @@ namespace iFruitAddon2
             var className = methodInfo.ReflectedType.Name;
 
             return $"{className}.{methodInfo.Name}";
+        }
+
+        internal static class Game
+        {
+            internal static uint GetPlayerPedHandle()
+            {
+                return Function.Call<uint>(Hash.PLAYER_PED_ID);
+            }
+            internal static PedHash GetPlayerPedModelHash()
+            {
+                return Function.Call<PedHash>(Hash.GET_ENTITY_MODEL, GetPlayerPedHandle());
+            }
+            internal static void TaskPutAwayMobilePhone()
+            {
+                Function.Call(Hash.TASK_USE_MOBILE_PHONE, GetPlayerPedHandle(), false);
+            }
+            internal static void TaskUseMobilePhone()
+            {
+                Function.Call(Hash.TASK_USE_MOBILE_PHONE, GetPlayerPedHandle(), true);
+            }
+
         }
 
         internal static class Scripts
