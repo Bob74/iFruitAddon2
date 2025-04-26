@@ -22,5 +22,6 @@
     <file src="doc\phone1.png" target="." />
     <file src="doc\phone2.png" target="." />
     <file src="doc\phone3.png" target="." />
+    <file src="doc\folder_permission.png" target="." />
   </files>
 </package>
