@@ -18,7 +18,7 @@ This is a developer resource, it allows you to handle the game's phone to add co
 
 ### ⚠️ **Reminder to allow mods to create files in your GTA V directory**
 By default, mods won't be allowed to create files and folders. This can be an issue since `iFruitAddon2` write its config file in `scripts\iFruitAddon2\`. You need to allow your computer users to modify GTA V main directory:
-![Setup file permission](https://raw.githubusercontent.com/Bob74/iFruitAddon2/refs/heads/master/doc/file_permission.png)
+![Setup folder permission](https://raw.githubusercontent.com/Bob74/iFruitAddon2/refs/heads/master/doc/folder_permission.png)
 
 ## How to use (developer)
 * Reference `iFruitAddon2.ddl` in your project.
