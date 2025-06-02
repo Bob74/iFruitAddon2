@@ -64,7 +64,7 @@ namespace iFruitAddon2
                     Script.Wait(10);
 
                     Logger.Debug("Removing notification...");
-                    RemoveActiveNotification();
+                    Tools.Ui.RemoveActiveNotification();
                     Logger.Debug("Notification removed!");
                 }
 
@@ -124,18 +124,5 @@ namespace iFruitAddon2
             return data;
         }
 
-        /// <summary>
-        /// Remove the current notification.
-        /// Useful to remove "The selected contact is no longer available" when you try to call a contact that shouldn't exist (ie: contacts added by iFruitAddon).
-        /// </summary>
-        internal void RemoveActiveNotification()
-        {
-            // Spawning an empty notification
-            int notifId = GTA.UI.Notification.Show("");
-
-            // Removing the notification and the previous one
-            GTA.UI.Notification.Hide(notifId);
-            GTA.UI.Notification.Hide(notifId - 1);
-        }
     }
 }

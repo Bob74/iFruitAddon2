@@ -5,24 +5,54 @@ using System.IO;
 
 namespace iFruitAddon2
 {
+    /// <summary>
+    /// iFruitAddon2 main class.
+    /// Initialize, load configuration and handle temp files.
+    /// </summary>
     class iFruitAddon2 : Script
     {
+        /// <summary>
+        /// True if debug build. Used for logging debug level.
+        /// </summary>
         internal static bool IsDebug = false;
 
+        /// <summary>
+        /// True if the script has finished initialisation.
+        /// </summary>
         private static bool _initialized = false;
         internal static bool Initialized { get => _initialized; }
 
+        /// <summary>
+        /// Full path to the mod directory.
+        /// </summary>
         private static readonly string _mainDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "iFruitAddon2");
+
+        /// <summary>
+        /// Full path to the mod config file.
+        /// </summary>
         private static readonly string _configFile = Path.Combine(_mainDir, "config.ini");
 
-        private static string _tempFilePath;
+        /// <summary>
+        /// Current contact index.
+        /// </summary>
+        private static int _contactIndex = 40;
+        public static int ContactIndex { get => _contactIndex; internal set => _contactIndex = value; }
 
-        private static int contactIndex = 40;
-        public static int ContactIndex { get => contactIndex; internal set => contactIndex = value; }
+        /// <summary>
+        /// A synchronization object used to ensure thread-safe access to the contact index.
+        /// </summary>
+        /// <remarks>Prevent index duplication when creating contacts.</remarks>
+        private static readonly object _contactIndexLock = new object();
 
+        /// <summary>
+        /// Represents the configuration settings for the script.
+        /// </summary>
         private static ScriptSettings _config;
         public static ScriptSettings Config { get => _config; private set => _config = value; }
 
+        /// <summary>
+        /// Indicates whether the game is running the Enhanced version.
+        /// </summary>
         private static bool _isEnhanced = false;
         public static bool IsEnhanced { get => _isEnhanced; private set => _isEnhanced = value; }
 
@@ -32,89 +62,115 @@ namespace iFruitAddon2
 #if DEBUG
             IsDebug = true;
 #endif
-
-            Tick += Initialize;
-            Aborted += OnAborted;
-        }
-
-        internal static string GetTempFilePath()
-        {
-            if (!Directory.Exists(_mainDir))
-            {
-                Logger.Debug(_mainDir + " does not exists");
-                Logger.Debug("Creating main directory");
-                Directory.CreateDirectory(_mainDir);
-            }
-
-            // Must be unique for the session but common to all mods adding contacts
-            return Path.Combine(_mainDir, Process.GetCurrentProcess().Id.ToString() + ".tmp");
-        }
-
-        private void Initialize(object sender, EventArgs e)
-        {
-            // Reset log file
             Logger.ResetLogFile();
 
-            // Detecting Enhanced version
-            _isEnhanced = Process.GetCurrentProcess().ProcessName.ToLower().Contains("enhanced");
+            Logger.Debug("Initialization...");
 
-            // Removing old temp files (if the game has crashed, the file were not deleted)
-            Logger.Debug("Removing old temp files...");
-            foreach (string file in Directory.GetFiles(_mainDir, "*.tmp"))
-            {
-                if (File.Exists(new FileInfo(file).FullName))
-                {
-                    // Remove old temp file
-                    File.Delete(file);
-                    Logger.Debug($"Removing {file}");
-                }
-            }
+            CheckGameVersion();
 
-            // Get the process ID of the game and creating temp file
-            Logger.Debug("Getting process ID and creating temp file...");
-            FileInfo sessionTmpFileInfo = new FileInfo(GetTempFilePath());
-            _tempFilePath = sessionTmpFileInfo.FullName;
-            Logger.Debug("Temp file created: " + _tempFilePath);
-
-            Logger.Debug("Begin loading config file...");
             LoadConfigValues();
-            Logger.Debug("Config file loaded!");
 
+            Logger.Debug("Initialization successfully completed.");
             _initialized = true;
-
-            Tick -= Initialize;
         }
 
-        private void OnAborted(object sender, EventArgs e)
+        /// <summary>
+        /// Retrieves the next available contact index and increments the internal counter.
+        /// </summary>
+        /// <remarks>This method is thread-safe and ensures that the contact index is incremented
+        /// atomically. This prevent index duplication across mods using iFruitAddon2.</remarks>
+        /// <returns>The next available contact index as an integer.</returns>
+        public static int GetNextAvailableContactIndex()
         {
-            Logger.Debug("Closing...");
-            if (File.Exists(_tempFilePath))
+            int result;
+            lock (_contactIndexLock)
             {
-                Logger.Debug("Removing " + _tempFilePath);
-                File.Delete(_tempFilePath);
-                Logger.Debug("File removed: " + _tempFilePath);
+                result = _contactIndex++;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Determines whether the current game version is the Enhanced version or the Legacy version.
+        /// </summary>
+        private void CheckGameVersion()
+        {
+            try
+            {
+                Logger.Debug("Detecting Enhanced version...");
+                _isEnhanced = Process.GetCurrentProcess().ProcessName.ToLower().Contains("enhanced");
+                Logger.Debug($"{(_isEnhanced ? "Enhanced" : "Legacy")} version detected");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Failed to read GTA V version. Exception : {ex.Message}\n{ex.StackTrace}");
             }
         }
 
+        /// <summary>
+        /// Loads configuration values from the specified configuration file.
+        /// </summary>
+        /// <remarks>This method ensures that the main directory exists and creates a default
+        /// configuration file if one is not found.</remarks>
         private void LoadConfigValues()
         {
-            if (!Directory.Exists(_mainDir))
+            try
             {
-                Logger.Debug("Creating main directory");
-                Directory.CreateDirectory(_mainDir);
+                // Checks if the directory and files need to be created.
+                EnsureMainDirectoryExists();
             }
-            if (!File.Exists(_configFile))
+            catch (Exception ex)
             {
-                Logger.Debug("Creating config file");
-                File.WriteAllText(_configFile, Properties.Resources.config);
+                Logger.Error($"Failed to ensure main directory exists. Exception : {ex.Message}\n{ex.StackTrace}");
+                return;
             }
 
-            Logger.Debug("Loading config file");
-            Config = ScriptSettings.Load(_configFile);
+            try
+            {
+                // Ensuring that the config file is loaded. If not, create with default.
+                if (!File.Exists(_configFile))
+                {
+                    File.WriteAllText(_configFile, Properties.Resources.config);
+                    Logger.Debug("Config file did not exist; one has been created using defaults.");
+                }
 
-            Logger.Debug("Reading contact index...");
-            contactIndex = Config.GetValue("General", "StartIndex", 40);
-            Logger.Debug("Contact index: " + contactIndex.ToString());
+                Logger.Debug($"Loading configuration from {_configFile}...");
+                Config = ScriptSettings.Load(_configFile);
+
+                // Loading contact Index
+                Logger.Debug("Reading contact index...");
+                ContactIndex = Config.GetValue<int>("General", "StartIndex", 40);
+                Logger.Debug($"Contact index: {ContactIndex}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Failed to load configuration from {_configFile}. Exception : {ex.Message}\n{ex.StackTrace}");
+            }
+        }
+
+        /// <summary>
+        /// Ensures that the main mod directory exists, creating it if necessary.
+        /// </summary>
+        /// <remarks>If the directory does not exist, it is created.</remarks>
+        private void EnsureMainDirectoryExists()
+        {
+            try
+            {
+                if (!Directory.Exists(_mainDir))
+                {
+                    Directory.CreateDirectory(_mainDir);
+                    Logger.Debug($"Created directory {_mainDir} due to nonexistence.");
+                }
+                else
+                {
+                    Logger.Debug($"Directory {_mainDir} already exists. Skipping creation...");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Error ensuring {nameof(_mainDir)} existence: {ex.Message}");
+                throw;
+            }
         }
 
     }
