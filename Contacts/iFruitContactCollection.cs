@@ -4,27 +4,47 @@ using System.Collections.Generic;
 
 namespace iFruitAddon2
 {
+    /// <summary>
+    /// Collection of iFruit contacts.
+    /// </summary>
     public class iFruitContactCollection : List<iFruitContact>
     {
+        /// <summary>
+        /// Internal index used to keep track of the current contact index.
+        /// </summary>
         public static int _currentIndex = 40;
+        
         private bool _shouldDraw = true;
-        private readonly int _scriptHash;
 
+        private readonly int _appContactScriptHash;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="iFruitContactCollection"/> class.
+        /// </summary>
         public iFruitContactCollection()
         {
             Logger.Debug("Initializing new iFruitContactCollection...");
-            _scriptHash = Game.GenerateHash("appcontacts");
+            _appContactScriptHash = Game.GenerateHash("appcontacts");
             Logger.Debug("iFruitContactCollection initialized!");
         }
 
+        /// <summary>
+        /// Update all the contacts in the collection.
+        /// </summary>
+        /// <param name="handle">The handle of the phone scaleform.</param>
         internal void Update(int handle)
         {
             int _selectedIndex = 0;
 
             // If we are in the Contacts menu
-            if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, _scriptHash) > 0)
+            if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, _appContactScriptHash) > 0)
             {
                 _shouldDraw = true;
+
+                // Debug log all contacts indexes in the form: [0, 1, 2, ...]
+                Logger.Debug("Current contact indexes: [" + string.Join(", ", this.ConvertAll(c => c.Index)) + "]");
+
+
 
                 if (Game.IsControlPressed(Control.PhoneSelect))
                 {
@@ -75,10 +95,10 @@ namespace iFruitAddon2
         /// <summary>
         /// Display the current call on the phone.
         /// </summary>
-        /// <param name="handle"></param>
-        /// <param name="contactName"></param>
+        /// <param name="handle">The handle of the phone scaleform.</param>
+        /// <param name="contactName">Contact name to display</param>
         /// <param name="statusText">CELL_211 = "DIALING..." / CELL_219 = "CONNECTED"</param>
-        /// <param name="picName"></param>
+        /// <param name="picName">Contact icon to display</param>
         public static void DisplayCallUI(int handle, string contactName, string statusText = "CELL_211", string picName = "CELL_300")
         {
             string dialText = Game.GetLocalizedString(statusText); // "DIALING..." translated in current game's language
@@ -110,8 +130,8 @@ namespace iFruitAddon2
         /// <summary>
         /// Get the index of the current highlighted contact.
         /// </summary>
-        /// <param name="handle"></param>
-        /// <returns></returns>
+        /// <param name="handle">The handle of the phone scaleform.</param>
+        /// <returns>Index of the highlighted contact</returns>
         internal int GetSelectedIndex(int handle)
         {
             Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, handle, "GET_CURRENT_SELECTION");

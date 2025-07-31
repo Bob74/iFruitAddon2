@@ -1,10 +1,15 @@
 ﻿using GTA;
 using GTA.Native;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace iFruitAddon2
 {
+    /// <summary>
+    /// Extends the String class with additional functionality.
+    /// </summary>
     internal static class Extensions
     {
         /// <summary>
@@ -39,6 +44,15 @@ namespace iFruitAddon2
             var className = methodInfo.ReflectedType.Name;
 
             return $"{className}.{methodInfo.Name}";
+        }
+
+        /// <summary>
+        /// Retrieves the full path to the iFruitAddon2 mod directory.
+        /// </summary>
+        /// <returns>A string representing the full path to the iFruitAddon2 mod directory.</returns>
+        internal static string GetiFruitAddonDirectory()
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "iFruitAddon2");
         }
 
         internal static class Game

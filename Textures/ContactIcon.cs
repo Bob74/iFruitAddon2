@@ -1,6 +1,9 @@
 ﻿
 namespace iFruitAddon2
 {
+    /// <summary>
+    /// Represents a contact icon that will be displayed in the phone.
+    /// </summary>
     public sealed class ContactIcon : PhoneImage
     {
         /// <summary>

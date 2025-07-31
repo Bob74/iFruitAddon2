@@ -4,6 +4,9 @@ using System;
 
 namespace iFruitAddon2
 {
+    /// <summary>
+    /// Represents a contact in the iFruit phone.
+    /// </summary>
     public class iFruitContact
     {
         private bool _dialActive, _busyActive;
@@ -15,6 +18,10 @@ namespace iFruitAddon2
         /// Fired when the contact picks up the phone.
         /// </summary>
         public event ContactAnsweredEvent Answered;
+
+        /// <summary>
+        /// Triggers the Answered event.
+        /// </summary>
         protected virtual void OnAnswered(iFruitContact sender) { Answered?.Invoke(this); }
 
         /// <summary>
@@ -49,6 +56,10 @@ namespace iFruitAddon2
         /// </summary>
         public bool Bold { get; set; } = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="iFruitContact"/> class with a specified name.
+        /// </summary>
+        /// <param name="name">The name of the contact.</param>
         public iFruitContact(string name)
         {
             Name = name;
@@ -56,6 +67,10 @@ namespace iFruitAddon2
             Logger.Debug($"{DateTime.Now} : New contact created: {Name} ({Index})");
         }
 
+        /// <summary>
+        /// Draw the contact in the phone interface.
+        /// </summary>
+        /// <param name="handle">The handle of the phone scaleform.</param>
         internal void Draw(int handle)
         {
             if (Index > -1)
@@ -76,6 +91,9 @@ namespace iFruitAddon2
             }
         }
 
+        /// <summary>
+        /// Update the contact state.
+        /// </summary>
         internal void Update()
         {
             // Contact was busy and busytimer has ended
@@ -123,7 +141,7 @@ namespace iFruitAddon2
         }
 
         /// <summary>
-        /// Call this contact.
+        /// Call the contact.
         /// If DialTimeout less or equal than 0, the contact will pickup instantly.
         /// </summary>
         public void Call()

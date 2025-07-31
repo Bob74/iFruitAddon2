@@ -23,16 +23,6 @@ namespace iFruitAddon2
         internal static bool Initialized { get => _initialized; }
 
         /// <summary>
-        /// Full path to the mod directory.
-        /// </summary>
-        private static readonly string _mainDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "iFruitAddon2");
-
-        /// <summary>
-        /// Full path to the mod config file.
-        /// </summary>
-        private static readonly string _configFile = Path.Combine(_mainDir, "config.ini");
-
-        /// <summary>
         /// Current contact index.
         /// </summary>
         private static int _contactIndex = 40;
@@ -45,17 +35,15 @@ namespace iFruitAddon2
         private static readonly object _contactIndexLock = new object();
 
         /// <summary>
-        /// Represents the configuration settings for the script.
-        /// </summary>
-        private static ScriptSettings _config;
-        public static ScriptSettings Config { get => _config; private set => _config = value; }
-
-        /// <summary>
         /// Indicates whether the game is running the Enhanced version.
         /// </summary>
         private static bool _isEnhanced = false;
         public static bool IsEnhanced { get => _isEnhanced; private set => _isEnhanced = value; }
 
+        /// <summary>
+        /// Config file handler.
+        /// </summary>
+        private readonly Config _config = new Config();
 
         public iFruitAddon2()
         {
@@ -67,8 +55,7 @@ namespace iFruitAddon2
             Logger.Debug("Initialization...");
 
             CheckGameVersion();
-
-            LoadConfigValues();
+            ContactIndex = _config.GetContactStartIndex();
 
             Logger.Debug("Initialization successfully completed.");
             _initialized = true;
@@ -104,72 +91,6 @@ namespace iFruitAddon2
             catch (Exception ex)
             {
                 Logger.Error($"Failed to read GTA V version. Exception : {ex.Message}\n{ex.StackTrace}");
-            }
-        }
-
-        /// <summary>
-        /// Loads configuration values from the specified configuration file.
-        /// </summary>
-        /// <remarks>This method ensures that the main directory exists and creates a default
-        /// configuration file if one is not found.</remarks>
-        private void LoadConfigValues()
-        {
-            try
-            {
-                // Checks if the directory and files need to be created.
-                EnsureMainDirectoryExists();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Failed to ensure main directory exists. Exception : {ex.Message}\n{ex.StackTrace}");
-                return;
-            }
-
-            try
-            {
-                // Ensuring that the config file is loaded. If not, create with default.
-                if (!File.Exists(_configFile))
-                {
-                    File.WriteAllText(_configFile, Properties.Resources.config);
-                    Logger.Debug("Config file did not exist; one has been created using defaults.");
-                }
-
-                Logger.Debug($"Loading configuration from {_configFile}...");
-                Config = ScriptSettings.Load(_configFile);
-
-                // Loading contact Index
-                Logger.Debug("Reading contact index...");
-                ContactIndex = Config.GetValue<int>("General", "StartIndex", 40);
-                Logger.Debug($"Contact index: {ContactIndex}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Failed to load configuration from {_configFile}. Exception : {ex.Message}\n{ex.StackTrace}");
-            }
-        }
-
-        /// <summary>
-        /// Ensures that the main mod directory exists, creating it if necessary.
-        /// </summary>
-        /// <remarks>If the directory does not exist, it is created.</remarks>
-        private void EnsureMainDirectoryExists()
-        {
-            try
-            {
-                if (!Directory.Exists(_mainDir))
-                {
-                    Directory.CreateDirectory(_mainDir);
-                    Logger.Debug($"Created directory {_mainDir} due to nonexistence.");
-                }
-                else
-                {
-                    Logger.Debug($"Directory {_mainDir} already exists. Skipping creation...");
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Error ensuring {nameof(_mainDir)} existence: {ex.Message}");
-                throw;
             }
         }
 

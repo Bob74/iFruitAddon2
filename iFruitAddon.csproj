@@ -20,15 +20,16 @@
     <PackageTags>ifruit ifruitaddon ifruitaddon2 gta gtav mod library</PackageTags>
     <PostBuildEvent />
     <Platforms>AnyCPU;x64</Platforms>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\iFruitAddon2.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugType>full</DebugType>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent />
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

@@ -3,6 +3,9 @@ using GTA.Native;
 
 namespace iFruitAddon2
 {
+    /// <summary>
+    /// Represents a phone image asset (ie: contact icon, wallpaper, ...).
+    /// </summary>
     public abstract class PhoneImage
     {
         /// <summary>
