@@ -44,7 +44,7 @@ namespace iFruitAddon2
         /// Milliseconds timeout before the contact picks up. 
         /// Set this to 0 if you want the contact to answer instantly.
         /// </summary>
-        public int DialTimeout { get; set; } = -1;
+        public int DialTimeout { get; set; } = 0;
 
         /// <summary>
         /// The icon to associate with this contact.
