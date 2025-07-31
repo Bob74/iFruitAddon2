@@ -4,34 +4,104 @@ using System.Drawing;
 
 namespace iFruitAddon2
 {
-
+    /// <summary>
+    /// Represents the set of icons that can be displayed on a soft key.
+    /// </summary>
+    /// <remarks>
+    /// Each value corresponds to a predefined icon, such as "Select", "Back", or "Call".
+    /// </remarks>
     public enum SoftKeyIcon
     {
+        /// <summary>
+        /// Blank icon, no icon displayed.
+        /// </summary>
         Blank = 1,
+        /// <summary>
+        /// +
+        /// </summary>
         Select = 2,
+        /// <summary>
+        /// ●○
+        /// </summary>
         Pages = 3,
+        /// <summary>
+        /// ←
+        /// </summary>
         Back = 4,
+        /// <summary>
+        /// Phone icon.
+        /// </summary>
         Call = 5,
+        /// <summary>
+        /// Hanged up phone icon.
+        /// </summary>
         Hangup = 6,
+        /// <summary>
+        /// User hanged up phone icon.
+        /// </summary>
         HangupHuman = 7,
+        /// <summary>
+        /// Hanging up phone icon.
+        /// </summary>
         Week = 8,
+        /// <summary>
+        /// 9 dots grid icon.
+        /// </summary>
         Keypad = 9,
+        /// <summary>
+        /// Opened letter icon.
+        /// </summary>
         Open = 10,
+        /// <summary>
+        /// Opened letter with right arrow icon.
+        /// </summary>
         Reply = 11,
+        /// <summary>
+        /// Trash icon.
+        /// </summary>
         Delete = 12,
+        /// <summary>
+        /// Ok checkmark icon.
+        /// </summary>
         Yes = 13,
+        /// <summary>
+        /// Cross mark icon.
+        /// </summary>
         No = 14,
+        /// <summary>
+        /// ↓≡
+        /// </summary>
         Sort = 15,
+        /// <summary>
+        /// World Wide Web icon.
+        /// </summary>
         Website = 16,
+        /// <summary>
+        /// Star icon.
+        /// </summary>
         Police = 17,
+        /// <summary>
+        /// Emergency star symbol.
+        /// </summary>
         Ambulance = 18,
+        /// <summary>
+        /// Fire icon.
+        /// </summary>
         Fire = 19,
+        /// <summary>
+        /// ○●
+        /// </summary>
         Pages2 = 20
     }
 
-    //public delegate void ContactSelectedEvent(iFruitContactCollection sender, iFruitContact selectedItem);
+    /// <summary>
+    /// Event triggered when a contact has answered the phone.
+    /// </summary>
     public delegate void ContactAnsweredEvent(iFruitContact contact);
 
+    /// <summary>
+    /// This class is used to manage the iFruit phone and contacts.
+    /// </summary>
     public class CustomiFruit
     {
         internal static CustomiFruit Instance = null;
@@ -79,17 +149,21 @@ namespace iFruitAddon2
             set { _contacts = value; }
         }
 
+        /// <summary>
+        /// Initialize the class with an empty contact collection.
+        /// </summary>
         public CustomiFruit() : this(new iFruitContactCollection())
         { }
 
         /// <summary>
         /// Initialize the class.
         /// </summary>
-        /// <param name="contacts"></param>
+        /// <param name="contacts">Contact collection to initialize the phone with</param>
         public CustomiFruit(iFruitContactCollection contacts)
         {
             Instance = this;
             _contacts = contacts;
+            Logger.Debug("CustomiFruit initialized with a contact collection containing " + contacts.Count + " contacts.");
         }
 
         /// <summary>
@@ -107,7 +181,7 @@ namespace iFruitAddon2
         /// <summary>
         /// Set text displayed at the top of the phone interface. Must be called every update!
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">Text to display</param>
         public void SetTextHeader(string text)
         {
             Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, Handle, "SET_HEADER");
@@ -149,20 +223,23 @@ namespace iFruitAddon2
         /// <summary>
         /// Set the wallpaper of the phone.
         /// </summary>
-        /// <param name="wallpaper"></param>
-        public void SetWallpaper(Wallpaper wallpaper)
+        /// <param name="phoneImage">Any PhoneImage</param>
+        public void SetWallpaper(PhoneImage phoneImage)
         {
-            _wallpaper = wallpaper;
+            _wallpaper = phoneImage;
         }
-        public void SetWallpaper(ContactIcon icon)
-        {
-            _wallpaper = icon;
-        }
+
+        /// <summary>
+        /// Set the wallpaper of the phone by loading a texture dictionary.
+        /// </summary>
         public void SetWallpaper(string textureDict)
         {
             _wallpaper = new Wallpaper(textureDict);
         }
 
+        /// <summary>
+        /// Update the phone UI and contacts calling.
+        /// </summary>
         public void Update()
         {
             if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, PhoneScript.CellphoneHandHash) > 0)
@@ -217,6 +294,10 @@ namespace iFruitAddon2
                 _timerClose = Game.GameTime + timer;
             }
         }
+
+        /// <summary>
+        /// Closes the phone immediately.
+        /// </summary>
         private void Close()
         {
             if (Function.Call<int>(Hash.GET_NUMBER_OF_THREADS_RUNNING_THE_SCRIPT_WITH_THIS_HASH, PhoneScript.CellphoneHandHash) > 0)

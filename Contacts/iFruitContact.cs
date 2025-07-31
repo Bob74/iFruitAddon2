@@ -1,10 +1,12 @@
 ﻿using GTA;
 using GTA.Native;
 using System;
-using System.IO;
 
 namespace iFruitAddon2
 {
+    /// <summary>
+    /// Represents a contact in the iFruit phone.
+    /// </summary>
     public class iFruitContact
     {
         private bool _dialActive, _busyActive;
@@ -16,6 +18,10 @@ namespace iFruitAddon2
         /// Fired when the contact picks up the phone.
         /// </summary>
         public event ContactAnsweredEvent Answered;
+
+        /// <summary>
+        /// Triggers the Answered event.
+        /// </summary>
         protected virtual void OnAnswered(iFruitContact sender) { Answered?.Invoke(this); }
 
         /// <summary>
@@ -50,31 +56,44 @@ namespace iFruitAddon2
         /// </summary>
         public bool Bold { get; set; } = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="iFruitContact"/> class with a specified name.
+        /// </summary>
+        /// <param name="name">The name of the contact.</param>
         public iFruitContact(string name)
         {
-            UpdateContactIndex();
-
             Name = name;
-            Index = iFruitAddon2.ContactIndex;
-            iFruitAddon2.ContactIndex++;
+            Index = iFruitAddon2.GetNextAvailableContactIndex();
+            Logger.Debug($"{DateTime.Now} : New contact created: {Name} ({Index})");
         }
+
+        /// <summary>
+        /// Draw the contact in the phone interface.
+        /// </summary>
+        /// <param name="handle">The handle of the phone scaleform.</param>
         internal void Draw(int handle)
         {
-            Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, handle, "SET_DATA_SLOT");
-            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 2);
-            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, Index);
-            Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 0);
-            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "STRING");
-            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Name);
-            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
-            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "CELL_999");
-            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
-            Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "CELL_2000");
-            Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Icon.Name.SetBold(Bold));
-            Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
-            Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
+            if (Index > -1)
+            {
+                Function.Call(Hash.BEGIN_SCALEFORM_MOVIE_METHOD, handle, "SET_DATA_SLOT");
+                Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 2);
+                Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, Index);
+                Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_INT, 0);
+                Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "STRING");
+                Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Name);
+                Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
+                Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "CELL_999");
+                Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
+                Function.Call(Hash.BEGIN_TEXT_COMMAND_SCALEFORM_STRING, "CELL_2000");
+                Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, Icon.Name.SetBold(Bold));
+                Function.Call(Hash.END_TEXT_COMMAND_SCALEFORM_STRING);
+                Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
+            }
         }
 
+        /// <summary>
+        /// Update the contact state.
+        /// </summary>
         internal void Update()
         {
             // Contact was busy and busytimer has ended
@@ -122,7 +141,7 @@ namespace iFruitAddon2
         }
 
         /// <summary>
-        /// Call this contact.
+        /// Call the contact.
         /// If DialTimeout less or equal than 0, the contact will pickup instantly.
         /// </summary>
         public void Call()
@@ -182,55 +201,6 @@ namespace iFruitAddon2
                 Function.Call(Hash.RELEASE_SOUND_ID, _busySoundID);
                 _busySoundID = -1;
                 _busyActive = false;
-            }
-        }
-
-        private void UpdateContactIndex()
-        {
-            // Warning: new iFruitContact(...) can be called before iFruitAddon2 is initialized.
-            // That's why it is important not to rely on static variables inside the iFruitAddon2 class.
-            string tempFile = iFruitAddon2.GetTempFilePath();
-
-            if (File.Exists(tempFile))
-            {
-                // Not the first launch
-                bool written = false;
-                while (!written)
-                {
-                    try
-                    {
-                        // We need to check if the file is unlocked and then get the value and write the new one.
-                        StreamReader sr = new StreamReader(tempFile);
-                        if (int.TryParse(sr.ReadLine().Trim(new char[] { '\r', '\n', ' ' }), out int index))
-                        {
-                            iFruitAddon2.ContactIndex = index;
-                        }
-                        sr.Close();
-
-                        StreamWriter file = new StreamWriter(tempFile);
-                        file.WriteLine(iFruitAddon2.ContactIndex + 1);
-                        file.Close();
-                        written = true;
-                    }
-                    catch (IOException)
-                    {
-                        // The file is locked when StreamReader or StreamWriter has opened it.
-                        // The current instance of iFruitAddon2 must wait until the file is released.
-                    }
-                    catch (Exception ex)
-                    {
-                        // Unknown error occured
-                        Logger.Exception(ex);
-                        written = true;
-                    }
-                }
-            }
-            else
-            {
-                // First launch. We create the file
-                StreamWriter file = new StreamWriter(tempFile);
-                file.Write(iFruitAddon2.ContactIndex + 1);
-                file.Close();
             }
         }
 

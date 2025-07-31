@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
 
-/// <summary>
-/// Static logger class that allows direct logging of anything to a text file
-/// </summary>
-/// 
 namespace iFruitAddon2
 {
+    /// <summary>
+    /// Static logger class that allows direct logging of anything to a text file
+    /// </summary>
     static class Logger
     {
         private static readonly string logFileName = "iFruitAddon2.log";
