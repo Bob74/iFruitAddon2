@@ -15,11 +15,16 @@
     <FileVersion>3.1.0.0</FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <Authors>Bob_74 and CamxxCore</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Bob74/iFruitAddon2</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/Bob74/iFruitAddon2</PackageProjectUrl>
     <PackageReleaseNotes>Updated for SHVDN 3.</PackageReleaseNotes>
     <PackageTags>ifruit ifruitaddon ifruitaddon2 gta gtav mod library</PackageTags>
     <PostBuildEvent />
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\iFruitAddon2.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
@@ -31,13 +36,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <DebugType>pdbonly</DebugType>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <NoWarn>1701;1702</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <NoWarn>1701;1702</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -55,6 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="ScriptHookVDotNet3" Version="3.6.0" />
+    <PackageReference Include="ScriptHookVDotNet3" Version="[3.6.0,4.0)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="." />
+    <None Include="doc\phone1.png" Pack="true" PackagePath="." />
+    <None Include="doc\phone2.png" Pack="true" PackagePath="." />
+    <None Include="doc\phone3.png" Pack="true" PackagePath="." />
+    <None Include="doc\folder_permission.png" Pack="true" PackagePath="." />
   </ItemGroup>
 </Project>
