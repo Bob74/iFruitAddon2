@@ -220,6 +220,27 @@ namespace iFruitAddon2
             Function.Call(Hash.END_SCALEFORM_MOVIE_METHOD);
         }
 
+
+        /// <summary>
+        /// Set the wallpaper of the phone.
+        /// </summary>
+        /// <param name="wallpaper">Any Wallpaper</param>
+        [System.Obsolete("Use SetWallpaper(PhoneImage) instead.")]
+        public void SetWallpaper(Wallpaper wallpaper)
+        {
+            _wallpaper = wallpaper;
+        }
+
+        /// <summary>
+        /// Set the wallpaper of the phone.
+        /// </summary>
+        /// <param name="icon">Any ContactIcon</param>
+        [System.Obsolete("Use SetWallpaper(PhoneImage) instead.")]
+        public void SetWallpaper(ContactIcon icon)
+        {
+            _wallpaper = icon;
+        }
+
         /// <summary>
         /// Set the wallpaper of the phone.
         /// </summary>
