@@ -9,11 +9,6 @@ namespace iFruitAddon2
     /// </summary>
     public class iFruitContactCollection : List<iFruitContact>
     {
-        /// <summary>
-        /// Internal index used to keep track of the current contact index.
-        /// </summary>
-        public static int _currentIndex = 40;
-        
         private bool _shouldDraw = true;
 
         private readonly int _appContactScriptHash;

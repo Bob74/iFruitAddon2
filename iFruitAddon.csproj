@@ -10,9 +10,9 @@
     <Product>iFruitAddon2</Product>
     <Description>GTA V SHVDN3 library to interact with the iFruit phone.</Description>
     <Copyright>Copyright © Bob_74 and CamxxCore 2025</Copyright>
-    <Version>3.1.0.0</Version>
-    <AssemblyVersion>3.1.0.0</AssemblyVersion>
-    <FileVersion>3.1.0.0</FileVersion>
+    <Version>3.1.1.0</Version>
+    <AssemblyVersion>3.1.1.0</AssemblyVersion>
+    <FileVersion>3.1.1.0</FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <Authors>Bob_74 and CamxxCore</Authors>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -21,7 +21,7 @@
     <RepositoryUrl>https://github.com/Bob74/iFruitAddon2</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/Bob74/iFruitAddon2</PackageProjectUrl>
-    <PackageReleaseNotes>Updated for SHVDN 3.</PackageReleaseNotes>
+    <PackageReleaseNotes>Readded old methods to set wallpaper for compatibility and flagged them as obsolete</PackageReleaseNotes>
     <PackageTags>ifruit ifruitaddon ifruitaddon2 gta gtav mod library</PackageTags>
     <PostBuildEvent />
     <Platforms>x64</Platforms>
